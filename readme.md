@@ -1,8 +1,9 @@
-Instant, Ephemeral Developer Environments on Kubernetes.
+🚀 ZeroSetup
+**Instant, Ephemeral Developer Environments on Kubernetes.**
 
-📂 Folder Structure
-Plaintext
+## 📂 Folder Structure
 
+```text
 zerosetup/
 ├── backend/
 │   ├── main.py              # FastAPI Server (Manages K8s)
@@ -36,19 +37,33 @@ Opens the connection to Kubernetes.
 Bash
 
 cd ../../backend
+
 # Install Dependencies
 pip install fastapi uvicorn kubernetes
 
-# Run Server (Visible to WiFi network)
-python -m uvicorn main:app --reload --host 0.0.0.0 --port 8000
+# Run Server (Localhost)
+python -m uvicorn main:app --reload
 4. Run the Frontend (UI)
 Launches the Dashboard.
 
 Bash
 
 cd ../frontend
+
 # Install Dependencies
 npm install
 
-# Run React App (Visible to WiFi network)
-npm run dev -- --host
+# Run React App (Localhost)
+npm run dev
+🎮 How to Demo
+Open Browser: Go to http://localhost:5173.
+
+Launch: Click "INITIATE LAUNCH" on the Python Card.
+
+Access: When the button turns green, click "ACCESS TERMINAL".
+
+Show Off:
+
+Terminal: Type python3 welcome.py (Cool CLI visual).
+
+GUI: Type streamlit run dashboard.py (Launches a website inside the lab).

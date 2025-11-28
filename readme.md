@@ -1,4 +1,4 @@
-🚀 ZeroSetup
+#$ ZeroSetup
 **Instant, Ephemeral Developer Environments on Kubernetes.**
 
 ## 📂 Folder Structure

@@ -1,0 +1,226 @@
+/* --- GLOBAL RESETS --- */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #050505;
+  color: #e2e8f0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow-x: hidden;
+}
+
+/* --- SPACE BACKGROUND --- */
+.app-container {
+  min-height: 100vh;
+  background-image: 
+    radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 0% 100%, rgba(139, 92, 246, 0.15) 0%, transparent 50%);
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- HEADER --- */
+.top-bar {
+  height: 60px;
+  background: rgba(0, 0, 0, 0.6);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30px;
+  backdrop-filter: blur(10px);
+}
+
+.logo h1 {
+  font-size: 20px;
+  letter-spacing: 3px;
+  margin: 0;
+}
+.logo small {
+  color: #22d3ee;
+  font-size: 12px;
+  font-weight: normal;
+}
+
+.status-indicators {
+  font-family: monospace;
+  font-size: 12px;
+  color: #22d3ee;
+  display: flex;
+  gap: 20px;
+}
+.user-badge {
+  border: 1px solid rgba(34, 211, 238, 0.3);
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: rgba(34, 211, 238, 0.1);
+}
+
+/* --- DASHBOARD LAYOUT --- */
+.dashboard {
+  flex: 1;
+  padding: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.intro-text h2 {
+  font-size: 40px;
+  margin-bottom: 10px;
+  text-shadow: 0 0 20px rgba(34, 211, 238, 0.4);
+}
+.intro-text p {
+  color: #94a3b8;
+  font-size: 18px;
+  margin-bottom: 40px;
+}
+
+.grid-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr; /* Big card, two small cards */
+  gap: 30px;
+}
+
+/* --- CARD STYLES --- */
+.card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 30px;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.active-card {
+  min-height: 350px;
+  display: flex;
+  flex-direction: column;
+}
+.active-card:hover {
+  transform: translateY(-5px);
+  border-color: #22d3ee;
+  box-shadow: 0 0 30px rgba(34, 211, 238, 0.15);
+}
+
+/* Icons */
+.icon-box {
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+.python-icon { background: rgba(234, 179, 8, 0.1); color: #eab308; }
+.locked-icon { background: rgba(148, 163, 184, 0.1); color: #64748b; }
+
+.icon-box svg { width: 30px; height: 30px; }
+
+/* Text */
+.card h3 { margin: 0 0 10px 0; font-size: 24px; }
+.desc { color: #94a3b8; font-size: 14px; line-height: 1.5; margin-bottom: 20px; }
+
+/* Status Pill */
+.card-header { display: flex; justify-content: space-between; align-items: start; }
+.status-pill {
+  font-size: 10px;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 20px;
+  letter-spacing: 1px;
+}
+.online { background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.4); }
+
+/* Specs Grid */
+.specs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  font-family: monospace;
+  font-size: 12px;
+  color: #64748b;
+  margin-bottom: 30px;
+}
+
+/* --- BUTTONS --- */
+.action-btn {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-decoration: none;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.launch-btn {
+  background: linear-gradient(90deg, #0891b2, #2563eb);
+  color: white;
+  box-shadow: 0 0 15px rgba(8, 145, 178, 0.4);
+}
+.launch-btn:hover { box-shadow: 0 0 25px rgba(8, 145, 178, 0.6); }
+
+.access-btn {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid #10b981;
+  color: #34d399;
+}
+.access-btn:hover { background: #10b981; color: white; }
+
+.launch-btn svg { width: 18px; height: 18px; }
+
+/* --- LOCKED CARDS --- */
+.locked-card { opacity: 0.5; }
+.lock-label {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 10px;
+  color: #ef4444;
+  border: 1px solid #7f1d1d;
+  background: rgba(127, 29, 29, 0.3);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.progress-bar {
+  height: 6px;
+  background: #1e293b;
+  border-radius: 3px;
+  margin-top: auto;
+}
+.fill { height: 100%; background: #3b82f6; border-radius: 3px; }
+
+/* --- SCAN LINE ANIMATION --- */
+.scan-line {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 2px;
+  background: linear-gradient(90deg, transparent, #22d3ee, transparent);
+  animation: scan 3s linear infinite;
+  opacity: 0.5;
+}
+@keyframes scan {
+  0% { top: 0%; }
+  100% { top: 100%; }
+}
+
+/* --- FOOTER --- */
+footer {
+  text-align: center;
+  padding: 20px;
+  font-family: monospace;
+  font-size: 12px;
+  color: #475569;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}

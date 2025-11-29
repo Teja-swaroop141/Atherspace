@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+import './App.css';
 
 // --- ICONS ---
 const Icons = {
@@ -46,6 +47,52 @@ const Icons = {
     >
       <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
       <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+    </svg>
+  ),
+  Brain: () => (
+    <svg 
+      viewBox="0 0 24 24" 
+      fill="none" 
+      stroke="currentColor" 
+      strokeWidth="2" 
+      strokeLinecap="round" 
+      strokeLinejoin="round" 
+      width="40" 
+      height="40"
+    >
+      <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/>
+      <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/>
+    </svg>
+  ),
+  Globe: () => (
+    <svg 
+      viewBox="0 0 24 24" 
+      fill="none" 
+      stroke="currentColor" 
+      strokeWidth="2" 
+      strokeLinecap="round" 
+      strokeLinejoin="round" 
+      width="40" 
+      height="40"
+    >
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="2" y1="12" x2="22" y2="12"/>
+      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+    </svg>
+  ),
+  Code: () => (
+    <svg 
+      viewBox="0 0 24 24" 
+      fill="none" 
+      stroke="currentColor" 
+      strokeWidth="2" 
+      strokeLinecap="round" 
+      strokeLinejoin="round" 
+      width="40" 
+      height="40"
+    >
+      <polyline points="16 18 22 12 16 6"/>
+      <polyline points="8 6 2 12 8 18"/>
     </svg>
   ),
   Rocket: () => (
@@ -95,6 +142,18 @@ function App() {
   const [loadingCyber, setLoadingCyber] = useState(false);
   const [cyberUrl, setCyberUrl] = useState(null);
 
+  // Jupyter Lab State
+  const [loadingJupyter, setLoadingJupyter] = useState(false);
+  const [jupyterUrl, setJupyterUrl] = useState(null);
+
+  // MERN Lab State
+  const [loadingMern, setLoadingMern] = useState(false);
+  const [mernUrl, setMernUrl] = useState(null);
+
+  // C++ Lab State
+  const [loadingCpp, setLoadingCpp] = useState(false);
+  const [cppUrl, setCppUrl] = useState(null);
+
   // Launch Python Lab
   const launchPython = async () => {
     setLoadingPy(true);
@@ -141,6 +200,54 @@ function App() {
       alert("⚠️ Connection Error");
     }
     setLoadingCyber(false);
+  };
+
+  // Launch Jupyter Lab
+  const launchJupyter = async () => {
+    setLoadingJupyter(true);
+    try {
+      const response = await axios.post('http://localhost:8000/start-jupyter-lab');
+      if (response.data.status === "error") {
+        alert("❌ Error: " + response.data.message);
+      } else if (response.data.url) {
+        setJupyterUrl(response.data.url);
+      }
+    } catch (error) {
+      alert("⚠️ Connection Error");
+    }
+    setLoadingJupyter(false);
+  };
+
+  // Launch MERN Lab
+  const launchMern = async () => {
+    setLoadingMern(true);
+    try {
+      const response = await axios.post('http://localhost:8000/start-mern-lab');
+      if (response.data.status === "error") {
+        alert("❌ Error: " + response.data.message);
+      } else if (response.data.url) {
+        setMernUrl(response.data.url);
+      }
+    } catch (error) {
+      alert("⚠️ Connection Error");
+    }
+    setLoadingMern(false);
+  };
+
+  // Launch C++ Lab
+  const launchCpp = async () => {
+    setLoadingCpp(true);
+    try {
+      const response = await axios.post('http://localhost:8000/start-cpp-lab');
+      if (response.data.status === "error") {
+        alert("❌ Error: " + response.data.message);
+      } else if (response.data.url) {
+        setCppUrl(response.data.url);
+      }
+    } catch (error) {
+      alert("⚠️ Connection Error");
+    }
+    setLoadingCpp(false);
   };
 
   return (
@@ -190,7 +297,7 @@ function App() {
               <span className="status-pill online">ONLINE</span>
             </div>
             
-            <h3>Python Core</h3>
+            <h3>Python Virtual Lab</h3>
             
             <p className="desc">
               High-performance environment optimized for Data Science & AI tasks. 
@@ -240,7 +347,7 @@ function App() {
               <span className="status-pill online">ONLINE</span>
             </div>
             
-            <h3>SQL Playground</h3>
+            <h3>SQL & DB Virtual Lab</h3>
             
             <p className="desc">
               Production-ready MySQL database instance paired with the Adminer Web GUI. 
@@ -290,7 +397,7 @@ function App() {
               <span className="status-pill restricted">RESTRICTED</span>
             </div>
             
-            <h3>Black Ops</h3>
+            <h3>Cyber Virtual Lab</h3>
             
             <p className="desc">
               Ubuntu Security Box equipped with Nmap, Netcat, and a hidden vulnerability 
@@ -324,6 +431,156 @@ function App() {
                 className="action-btn cyber-access-btn"
               >
                 <Icons.Terminal /> ENTER TERMINAL
+              </a>
+            )}
+          </div>
+
+          {/* CARD 4: DATA SCIENCE & AI LAB */}
+          <div className="card active-card">
+            <div className="scan-line"></div>
+            
+            <div className="card-header">
+              <div className="icon-box jupyter-icon">
+                <Icons.Brain />
+              </div>
+              <span className="status-pill online">ONLINE</span>
+            </div>
+            
+            <h3>Data Science & AI Lab</h3>
+            
+            <p className="desc">
+              JupyterLab environment optimized for machine learning workflows. 
+              Pre-loaded with Pandas, NumPy, Matplotlib, and Scikit-learn. Includes 
+              Titanic dataset and sample visualization script for immediate experimentation.
+            </p>
+
+            <div className="specs">
+              <span>ENV: JUPYTER</span>
+              <span>DATASETS: LOADED</span>
+            </div>
+
+            {!jupyterUrl ? (
+              <button 
+                onClick={launchJupyter} 
+                disabled={loadingJupyter} 
+                className="action-btn launch-btn"
+              >
+                {loadingJupyter ? (
+                  "INITIALIZING..."
+                ) : (
+                  <>
+                    <Icons.Rocket /> DEPLOY LAB
+                  </>
+                )}
+              </button>
+            ) : (
+              <a 
+                href={jupyterUrl} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="action-btn access-btn"
+              >
+                <Icons.Terminal /> OPEN JUPYTER
+              </a>
+            )}
+          </div>
+
+          {/* CARD 5: FULL-STACK WEB LAB */}
+          <div className="card active-card">
+            <div className="scan-line"></div>
+            
+            <div className="card-header">
+              <div className="icon-box mern-icon">
+                <Icons.Globe />
+              </div>
+              <span className="status-pill online">ONLINE</span>
+            </div>
+            
+            <h3>Full-Stack Web Lab</h3>
+            
+            <p className="desc">
+              Complete MERN stack development environment with Node.js, React, and 
+              MongoDB pre-configured. Features live preview functionality that automatically 
+              exposes your React app for real-time testing alongside your code.
+            </p>
+
+            <div className="specs">
+              <span>STACK: MERN</span>
+              <span>PREVIEW: LIVE</span>
+            </div>
+
+            {!mernUrl ? (
+              <button 
+                onClick={launchMern} 
+                disabled={loadingMern} 
+                className="action-btn launch-btn"
+              >
+                {loadingMern ? (
+                  "PROVISIONING..."
+                ) : (
+                  <>
+                    <Icons.Rocket /> DEPLOY STACK
+                  </>
+                )}
+              </button>
+            ) : (
+              <a 
+                href={mernUrl} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="action-btn access-btn"
+              >
+                <Icons.Terminal /> OPEN IDE
+              </a>
+            )}
+          </div>
+
+          {/* CARD 6: C/C++ DSA LAB */}
+          <div className="card active-card">
+            <div className="scan-line"></div>
+            
+            <div className="card-header">
+              <div className="icon-box cpp-icon">
+                <Icons.Code />
+              </div>
+              <span className="status-pill online">ONLINE</span>
+            </div>
+            
+            <h3>Legacy C/C++ Lab</h3>
+            
+            <p className="desc">
+              Optimized environment for Data Structures & Algorithms with GCC, G++, and 
+              GDB debugger pre-installed. Features one-click compile and run with F5. 
+              No command-line compilation required—just write code and execute.
+            </p>
+
+            <div className="specs">
+              <span>COMPILER: GCC</span>
+              <span>DEBUG: GDB</span>
+            </div>
+
+            {!cppUrl ? (
+              <button 
+                onClick={launchCpp} 
+                disabled={loadingCpp} 
+                className="action-btn launch-btn"
+              >
+                {loadingCpp ? (
+                  "INITIALIZING..."
+                ) : (
+                  <>
+                    <Icons.Rocket /> DEPLOY ENV
+                  </>
+                )}
+              </button>
+            ) : (
+              <a 
+                href={cppUrl} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="action-btn access-btn"
+              >
+                <Icons.Terminal /> OPEN EDITOR
               </a>
             )}
           </div>

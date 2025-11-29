@@ -35,3 +35,4 @@ def hacker_boot():
 
 if __name__ == "__main__":
     hacker_boot()
+    print("Hello, welcome to your EduKube Python Lab!")

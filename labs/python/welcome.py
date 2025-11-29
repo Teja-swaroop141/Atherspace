@@ -35,4 +35,4 @@ def hacker_boot():
 
 if __name__ == "__main__":
     hacker_boot()
-    print("..... Welcome to your Zerosetup Python Lab!")
+    print("hi ...Welcome to your Zerosetup Python Lab!")

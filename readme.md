@@ -7,7 +7,7 @@
 
 ## 📂 Project Structure
 
-```text
+```
 zerosetup/
 ├── backend/
 │   ├── main.py              # FastAPI Controller (Orchestrates Kubernetes)
@@ -27,6 +27,10 @@ zerosetup/
     └── cyber/
         ├── Dockerfile       # Kali-style Tools + NoVNC Desktop + XFCE
         └── secret.txt       # Hidden Flag for CTF Challenge
+```
+
+
+
 ⚡ Quick Start Guide (Run Locally)
 1. Prerequisites
 Docker Desktop (With Kubernetes Enabled in Settings).

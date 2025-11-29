@@ -140,3 +140,62 @@ def start_cyber_lab():
     }
 
     return launch_lab(api, student_id, pod_manifest, service_manifest)
+
+@app.post("/start-aiml-lab")
+def start_aiml_lab():
+    api = client.CoreV1Api()
+    
+    student_id = f"aiml-student-{random.randint(100, 999)}"
+    
+    pod_manifest = {
+        "apiVersion": "v1",
+        "kind": "Pod",
+        "metadata": {"name": student_id, "labels": {"app": student_id}},
+        "spec": {
+            "containers": [{
+                "name": "lab-container",
+                "image": "my-aiml-lab:v2",
+                "imagePullPolicy": "Never",
+                "ports": [{"containerPort": 8888}],
+                "command": ["start-notebook.sh"],
+                "args": [
+                    "--NotebookApp.default_url=/lab",
+                    "--ip=0.0.0.0",
+                    "--no-browser",
+                    "--port=8888",
+                    "--NotebookApp.token=''",
+                    "--NotebookApp.password=''"
+                ]
+            }]
+        }
+    }
+    
+    service_manifest = {
+        "apiVersion": "v1",
+        "kind": "Service",
+        "metadata": {"name": f"{student_id}-svc"},
+        "spec": {
+            "selector": {"app": student_id},
+            "type": "NodePort",
+            "ports": [{"port": 8888, "targetPort": 8888}]
+        }
+    }
+
+    try:
+        print(f"🚀 Launching AI/ML Lab for {student_id}...")
+        api.create_namespaced_pod(namespace="default", body=pod_manifest)
+        api.create_namespaced_service(namespace="default", body=service_manifest)
+        
+        time.sleep(2)
+        
+        svc = api.read_namespaced_service(name=f"{student_id}-svc", namespace="default")
+        node_port = svc.spec.ports[0].node_port
+        
+        return {
+            "status": "success",
+            "message": "AI/ML Lab Ready!",
+            "url": f"http://localhost:{node_port}/lab"
+        }
+
+    except Exception as e:
+        return {"status": "error", "message": str(e)}

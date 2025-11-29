@@ -206,7 +206,7 @@ function App() {
   const launchJupyter = async () => {
     setLoadingJupyter(true);
     try {
-      const response = await axios.post('http://localhost:8000/start-jupyter-lab');
+      const response = await axios.post('http://localhost:8000/start-aiml-lab');
       if (response.data.status === "error") {
         alert("❌ Error: " + response.data.message);
       } else if (response.data.url) {

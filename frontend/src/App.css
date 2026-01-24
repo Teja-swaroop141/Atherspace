@@ -54,6 +54,8 @@ body {
   background: rgba(15, 15, 25, 0.85);
   border-bottom: 1px solid rgba(0, 255, 255, 0.4);
   display: flex;
+  position: sticky;
+  top: 0;
   align-items: center;
   justify-content: space-between;
   padding: 0 50px;
@@ -167,6 +169,16 @@ body {
   box-shadow: 0 0 50px rgba(255, 0, 0, 0.25);
 }
 
+/* Networks Card Specific Styling */
+.network-card {
+  border-color: rgba(168, 85, 247, 0.3);
+}
+
+.network-card:hover {
+  border-color: #a855f7;
+  box-shadow: 0 0 50px rgba(168, 85, 247, 0.25);
+}
+
 /* --- SCAN LINE ANIMATION --- */
 .scan-line {
   position: absolute;
@@ -188,6 +200,11 @@ body {
 .cyber-scan {
   background: linear-gradient(90deg, transparent, #ff4444, transparent);
   box-shadow: 0 0 10px #ff4444;
+}
+
+.network-scan {
+  background: linear-gradient(90deg, transparent, #a855f7, transparent);
+  box-shadow: 0 0 10px #a855f7;
 }
 
 @keyframes scan {
@@ -246,9 +263,11 @@ body {
   text-shadow: 0 0 15px #00ff88;
 }
 
-.cpp-icon {
-  color: #9d4edd;
-  text-shadow: 0 0 15px #9d4edd;
+.network-icon {
+  color: #a855f7;
+  text-shadow: 0 0 15px #a855f7;
+  background: rgba(168, 85, 247, 0.15);
+  border: 1px solid rgba(168, 85, 247, 0.2);
 }
 
 .status-pill {
@@ -309,6 +328,10 @@ body {
 
 .cyber-specs {
   color: #ff4444;
+}
+
+.network-specs {
+  color: #a855f7;
 }
 
 /* --- BUTTONS --- */
@@ -398,6 +421,40 @@ body {
 .cyber-access-btn:hover {
   background: #ff6666;
   box-shadow: 0 0 40px rgba(255, 0, 0, 0.8);
+  transform: scale(1.02);
+}
+
+/* Neon Purple Button - Networks Launch */
+.network-launch-btn {
+  background: #000;
+  color: #a855f7;
+  border: 2px solid #a855f7;
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.25);
+}
+
+.network-launch-btn:hover {
+  background: #a855f7;
+  color: #000;
+  box-shadow: 0 0 40px rgba(168, 85, 247, 0.8);
+  transform: scale(1.02);
+}
+
+.network-launch-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Networks Access Button */
+.network-access-btn {
+  background: #a855f7;
+  color: #fff;
+  border: 2px solid #a855f7;
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+}
+
+.network-access-btn:hover {
+  background: #b97efc;
+  box-shadow: 0 0 40px rgba(168, 85, 247, 0.8);
   transform: scale(1.02);
 }
 

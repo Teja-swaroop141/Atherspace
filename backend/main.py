@@ -3,10 +3,26 @@ from fastapi.middleware.cors import CORSMiddleware
 from kubernetes import client, config
 import time
 import random
+import string  # <--- WAS MISSING
 import socket
+import urllib3
 
 # --- 1. SETUP & CONFIGURATION ---
 app = FastAPI()
+
+# Disable SSL Warnings
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+# Load Kube Config
+try:
+    config.load_kube_config()
+    # Force Python to trust the local Docker cluster
+    configuration = client.Configuration.get_default_copy()
+    configuration.verify_ssl = False
+    client.Configuration.set_default(configuration)
+    print("✅ Connected to Kubernetes Cluster")
+except Exception as e:
+    print(f"⚠️ Warning: Could not load Kube Config. Is Docker running? {e}")
 
 app.add_middleware(
     CORSMiddleware,
@@ -18,184 +34,143 @@ app.add_middleware(
 def get_local_ip():
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        # Connect to a public DNS just to determine our own outgoing IP
         s.connect(("8.8.8.8", 80))
         ip = s.getsockname()[0]
         s.close()
         return ip
     except:
-        return "localhost" 
-
-HOST_IP = get_local_ip()
+        return "127.0.0.1"
+    
+    
+# HOST_IP = get_local_ip()
+HOST_IP = get_local_ip() # <-- USE THIS NEW LINE
 print(f"🌍 Server running on IP: {HOST_IP}")
 
-try:
-    config.load_kube_config()
-    print("✅ Connected to Kubernetes Cluster")
-except Exception as e:
-    print(f"❌ K8s Connection Failed: {e}")
-
-# --- 2. SHARED LAUNCH LOGIC ---
-def launch_lab(api, student_id, pod_manifest, service_manifest):
-    try:
-        print(f"🚀 Spawning Lab: {student_id}...")
-        api.create_namespaced_pod(namespace="default", body=pod_manifest)
-        api.create_namespaced_service(namespace="default", body=service_manifest)
-        
-        print("⏳ Waiting 10s for container to boot...")
-        time.sleep(10) 
-        
-        svc = api.read_namespaced_service(name=f"{student_id}-svc", namespace="default")
-        node_port = svc.spec.ports[0].node_port
-        final_url = f"http://{HOST_IP}:{node_port}"
-        
-        print(f"✅ Ready at: {final_url}")
-        return {"status": "success", "message": "Lab Deployed", "url": final_url}
-
-    except Exception as e:
-        print(f"🔥 Error: {e}")
-        return {"status": "error", "message": str(e)}
-
-# --- 3. ENDPOINT: PYTHON LAB ---
-@app.post("/start-python-lab")
-def start_python_lab():
-    api = client.CoreV1Api()
-    student_id = f"python-student-{random.randint(100, 999)}"
+# --- 2. THE UNIVERSAL LAB ENGINE ---
+def create_lab_session(lab_prefix, image_name, container_port=8080, extra_args=None, privileged=False):
+    """
+    Creates a Pod and a Service for a specific student lab.
+    """
+    # 1. Generate unique ID
+    random_id = ''.join(random.choices(string.digits, k=4))
+    pod_name = f"{lab_prefix}-{random_id}"
     
-    pod_manifest = {
-        "apiVersion": "v1", "kind": "Pod",
-        "metadata": {"name": student_id, "labels": {"app": student_id}},
-        "spec": {
-            "containers": [{
-                "name": "lab-container",
-                "image": "my-python-lab:v1",
-                "imagePullPolicy": "Never",
-                "ports": [{"containerPort": 8080}], 
-                "args": ["--auth", "none"]
-            }]
+    # 2. Connect to Kubernetes
+    v1 = client.CoreV1Api()
+    
+    # 3. Security Context (For Cyber/Networks Lab)
+    security_context = {}
+    if privileged:
+        security_context = {
+            "privileged": True,
+            "capabilities": {"add": ["NET_ADMIN", "NET_RAW"]}
         }
-    }
-    
-    service_manifest = {
-        "apiVersion": "v1", "kind": "Service",
-        "metadata": {"name": f"{student_id}-svc"},
-        "spec": {"selector": {"app": student_id}, "type": "NodePort", "ports": [{"port": 8080, "targetPort": 8080}]}
-    }
-    return launch_lab(api, student_id, pod_manifest, service_manifest)
 
-# --- 4. ENDPOINT: SQL LAB ---
-@app.post("/start-sql-lab")
-def start_sql_lab():
-    api = client.CoreV1Api()
-    student_id = f"sql-student-{random.randint(100, 999)}"
-    
-    pod_manifest = {
-        "apiVersion": "v1", "kind": "Pod",
-        "metadata": {"name": student_id, "labels": {"app": student_id}},
-        "spec": {
-            "containers": [{
-                "name": "lab-container",
-                "image": "my-sql-lab:v1",
-                "imagePullPolicy": "Never",
-                "ports": [{"containerPort": 8080}]
-            }]
-        }
-    }
-    
-    service_manifest = {
-        "apiVersion": "v1", "kind": "Service",
-        "metadata": {"name": f"{student_id}-svc"},
-        "spec": {"selector": {"app": student_id}, "type": "NodePort", "ports": [{"port": 8080, "targetPort": 8080}]}
-    }
-    # FIXED: Added the return statement here!
-    return launch_lab(api, student_id, pod_manifest, service_manifest)
-
-# --- 5. ENDPOINT: CYBER LAB ---
-@app.post("/start-cyber-lab")
-def start_cyber_lab():
-    api = client.CoreV1Api()
-    student_id = f"cyber-student-{random.randint(100, 999)}"
-    
-    pod_manifest = {
-        "apiVersion": "v1", "kind": "Pod",
-        "metadata": {"name": student_id, "labels": {"app": student_id}},
-        "spec": {
-            "containers": [{
-                "name": "lab-container",
-                "image": "my-cyber-lab:v1",
-                "imagePullPolicy": "Never",
-                "ports": [{"containerPort": 6080}],
-                # FIXED: Moved securityContext HERE (Inside Container, NOT Service)
-                "securityContext": {
-                    "privileged": True,
-                    "capabilities": {"add": ["NET_ADMIN", "NET_RAW"]}
-                }
-            }]
-        }
-    }
-    
-    service_manifest = {
-        "apiVersion": "v1", "kind": "Service",
-        "metadata": {"name": f"{student_id}-svc"},
-        "spec": {"selector": {"app": student_id}, "type": "NodePort", "ports": [{"port": 6080, "targetPort": 6080}]}
-    }
-
-    return launch_lab(api, student_id, pod_manifest, service_manifest)
-
-@app.post("/start-aiml-lab")
-def start_aiml_lab():
-    api = client.CoreV1Api()
-    
-    student_id = f"aiml-student-{random.randint(100, 999)}"
-    
+    # 4. Define the Pod
     pod_manifest = {
         "apiVersion": "v1",
         "kind": "Pod",
-        "metadata": {"name": student_id, "labels": {"app": student_id}},
+        "metadata": {
+            "name": pod_name,
+            "labels": {"app": pod_name}
+        },
         "spec": {
             "containers": [{
                 "name": "lab-container",
-                "image": "my-aiml-lab:v2",
+                "image": image_name,
                 "imagePullPolicy": "Never",
-                "ports": [{"containerPort": 8888}],
-                "command": ["start-notebook.sh"],
-                "args": [
-                    "--NotebookApp.default_url=/lab",
-                    "--ip=0.0.0.0",
-                    "--no-browser",
-                    "--port=8888",
-                    "--NotebookApp.token=''",
-                    "--NotebookApp.password=''"
-                ]
+                "ports": [{"containerPort": container_port}],
+                "securityContext": security_context,
+                "args": extra_args if extra_args else []
             }]
         }
     }
-    
+
+    # 5. Define the Service
     service_manifest = {
         "apiVersion": "v1",
         "kind": "Service",
-        "metadata": {"name": f"{student_id}-svc"},
+        "metadata": {"name": f"{pod_name}-svc"},
         "spec": {
-            "selector": {"app": student_id},
             "type": "NodePort",
-            "ports": [{"port": 8888, "targetPort": 8888}]
+            "selector": {"app": pod_name},
+            "ports": [{
+                "protocol": "TCP",
+                "port": 80,          
+                "targetPort": container_port
+            }]
         }
     }
 
     try:
-        print(f"🚀 Launching AI/ML Lab for {student_id}...")
-        api.create_namespaced_pod(namespace="default", body=pod_manifest)
-        api.create_namespaced_service(namespace="default", body=service_manifest)
+        print(f"🚀 Spawning Lab: {pod_name}...")
+        v1.create_namespaced_pod(body=pod_manifest, namespace="default")
+        v1.create_namespaced_service(body=service_manifest, namespace="default")
         
+        # Wait a moment for K8s to assign the port
         time.sleep(2)
         
-        svc = api.read_namespaced_service(name=f"{student_id}-svc", namespace="default")
+        # Get the assigned NodePort
+        svc = v1.read_namespaced_service(name=f"{pod_name}-svc", namespace="default")
         node_port = svc.spec.ports[0].node_port
         
+        final_url = f"http://{HOST_IP}:{node_port}"
+        print(f"✅ Lab Ready: {final_url}")
+        
         return {
-            "status": "success",
-            "message": "AI/ML Lab Ready!",
-            "url": f"http://localhost:{node_port}/lab"
+            "status": "Success", 
+            "message": f"Lab started at {final_url}", 
+            "port": node_port,
+            "url": final_url,
+            "pod_name": pod_name
         }
 
     except Exception as e:
-        return {"status": "error", "message": str(e)}
+        print(f"🔥 Error: {e}")
+        return {"status": "Failure", "message": str(e)}
+
+
+# --- 3. LAB ENDPOINTS ---
+
+@app.post("/start-web-lab")
+def start_web_lab():
+    # ⚠️ FIXED: We REMOVED 'extra_args' here.
+    # The Dockerfile already has the full CMD (mongod + code-server), 
+    # so we must NOT overwrite it.
+    return create_lab_session(
+        "web-student", 
+        "zero-web-lab:latest", 
+        container_port=8080, 
+        extra_args=None  # <--- Set this to None!
+    )
+
+@app.post("/start-python-lab")
+def start_python_lab():
+    # Python Lab
+    return create_lab_session("python-student", "zero-simpleputhon-lab:latest", container_port=8080, extra_args=["--auth", "none"])
+
+@app.post("/start-sql-lab")
+def start_sql_lab():
+    # SQL Lab
+    return create_lab_session("sql-student", "zero-sql-lab:latest", container_port=8080)
+
+@app.post("/start-cyber-lab")
+def start_cyber_lab():
+    # Cyber Lab needs ROOT/PRIVILEGED access and Port 6080
+    return create_lab_session("cyber-student", "zero-cyber-lab:latest", container_port=6080, privileged=True)
+
+@app.post("/start-cn-lab")
+def start_cn_lab():
+    # Networks Lab needs ROOT/PRIVILEGED access and Port 6080
+    return create_lab_session("cn-student", "zero-cn-lab:latest", container_port=6080, privileged=True)
+
+@app.post("/start-aiml-lab")
+def start_aiml_lab():
+    # AI/ML is complex, usually uses Jupyter on 8888. 
+    # If using the python image with Jupyter installed:
+    return create_lab_session("aiml-student", "zero-python-lab:latest", container_port=8888, extra_args=[
+        "start-notebook.sh", "--NotebookApp.token=''", "--NotebookApp.password=''"
+    ])
+
+# Run with: uvicorn main:app --reload

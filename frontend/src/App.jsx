@@ -2,6 +2,8 @@ import { useState } from 'react';
 import axios from 'axios';
 import './App.css';
 
+// Automatically use the IP that the website is loaded from
+const API_BASE = `http://${window.location.hostname}:8000`;
 // --- ICONS ---
 const Icons = {
   Python: () => (
@@ -80,7 +82,7 @@ const Icons = {
       <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
     </svg>
   ),
-  Code: () => (
+  Network: () => (
     <svg 
       viewBox="0 0 24 24" 
       fill="none" 
@@ -91,8 +93,9 @@ const Icons = {
       width="40" 
       height="40"
     >
-      <polyline points="16 18 22 12 16 6"/>
-      <polyline points="8 6 2 12 8 18"/>
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="2" y1="12" x2="22" y2="12"/>
+      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
     </svg>
   ),
   Rocket: () => (
@@ -150,15 +153,15 @@ function App() {
   const [loadingMern, setLoadingMern] = useState(false);
   const [mernUrl, setMernUrl] = useState(null);
 
-  // C++ Lab State
-  const [loadingCpp, setLoadingCpp] = useState(false);
-  const [cppUrl, setCppUrl] = useState(null);
+  // Networks Lab State
+  const [loadingCn, setLoadingCn] = useState(false);
+  const [cnUrl, setCnUrl] = useState(null);
 
   // Launch Python Lab
   const launchPython = async () => {
     setLoadingPy(true);
     try {
-      const response = await axios.post('http://localhost:8000/start-python-lab');
+      const response = await axios.post('http://10.98.94.149:8000/start-python-lab');
       if (response.data.status === "error") {
         alert("❌ Error: " + response.data.message);
       } else if (response.data.url) {
@@ -174,7 +177,7 @@ function App() {
   const launchSQL = async () => {
     setLoadingSql(true);
     try {
-      const response = await axios.post('http://localhost:8000/start-sql-lab');
+      const response = await axios.post('http://10.98.94.149:8000/start-sql-lab');
       if (response.data.status === "error") {
         alert("❌ Error: " + response.data.message);
       } else if (response.data.url) {
@@ -190,7 +193,7 @@ function App() {
   const launchCyber = async () => {
     setLoadingCyber(true);
     try {
-      const response = await axios.post('http://localhost:8000/start-cyber-lab');
+      const response = await axios.post('http://10.98.94.149:8000/start-cyber-lab');
       if (response.data.status === "error") {
         alert("❌ Error: " + response.data.message);
       } else if (response.data.url) {
@@ -206,7 +209,7 @@ function App() {
   const launchJupyter = async () => {
     setLoadingJupyter(true);
     try {
-      const response = await axios.post('http://localhost:8000/start-aiml-lab');
+      const response = await axios.post('http://10.98.94.149:8000/start-aiml-lab');
       if (response.data.status === "error") {
         alert("❌ Error: " + response.data.message);
       } else if (response.data.url) {
@@ -218,36 +221,39 @@ function App() {
     setLoadingJupyter(false);
   };
 
-  // Launch MERN Lab
+ // Launch MERN Lab
   const launchMern = async () => {
     setLoadingMern(true);
     try {
-      const response = await axios.post('http://localhost:8000/start-mern-lab');
+      // ⚠️ CHANGED URL FROM 'start-mern-lab' TO 'start-web-lab'
+      const response = await axios.post('http://10.98.94.149:8000/start-web-lab');
+      
       if (response.data.status === "error") {
         alert("❌ Error: " + response.data.message);
       } else if (response.data.url) {
         setMernUrl(response.data.url);
       }
     } catch (error) {
-      alert("⚠️ Connection Error");
+      console.error(error); // Helpful for debugging
+      alert("⚠️ Connection Error: Is the backend running?");
     }
     setLoadingMern(false);
   };
 
-  // Launch C++ Lab
-  const launchCpp = async () => {
-    setLoadingCpp(true);
+  // Launch Networks Lab
+  const launchCn = async () => {
+    setLoadingCn(true);
     try {
-      const response = await axios.post('http://localhost:8000/start-cpp-lab');
+      const response = await axios.post('http://10.98.94.149:8000/start-cn-lab');
       if (response.data.status === "error") {
         alert("❌ Error: " + response.data.message);
       } else if (response.data.url) {
-        setCppUrl(response.data.url);
+        setCnUrl(response.data.url);
       }
     } catch (error) {
       alert("⚠️ Connection Error");
     }
-    setLoadingCpp(false);
+    setLoadingCn(false);
   };
 
   return (
@@ -256,11 +262,6 @@ function App() {
       {/* HEADER */}
       <header className="top-bar">
         <div className="logo">
-          <img 
-            src="/logo.svg" 
-            alt="ZeroSetup" 
-            style={{ height: '32px', marginRight: '15px' }} 
-          />
           <h1>
             ZEROSETUP <small>OS // V.1.0</small>
           </h1>
@@ -451,7 +452,7 @@ function App() {
             <p className="desc">
               JupyterLab environment optimized for machine learning workflows. 
               Pre-loaded with Pandas, NumPy, Matplotlib, and Scikit-learn. Includes 
-              Titanic dataset and sample visualization script for immediate experimentation.
+              Titanic dataset and sample visualization .
             </p>
 
             <div className="specs">
@@ -486,8 +487,8 @@ function App() {
           </div>
 
           {/* CARD 5: FULL-STACK WEB LAB */}
-          <div className="card active-card">
-            <div className="scan-line"></div>
+          <div className="card active-card web-card"> {/* Added web-card class */}
+            <div className="scan-line web-scan"></div>
             
             <div className="card-header">
               <div className="icon-box mern-icon">
@@ -501,7 +502,7 @@ function App() {
             <p className="desc">
               Complete MERN stack development environment with Node.js, React, and 
               MongoDB pre-configured. Features live preview functionality that automatically 
-              exposes your React app for real-time testing alongside your code.
+              exposes your React app .
             </p>
 
             <div className="specs">
@@ -535,52 +536,52 @@ function App() {
             )}
           </div>
 
-          {/* CARD 6: C/C++ DSA LAB */}
-          <div className="card active-card">
-            <div className="scan-line"></div>
+          {/* CARD 6: NETWORKS LAB */}
+          <div className="card active-card network-card">
+            <div className="scan-line network-scan"></div>
             
             <div className="card-header">
-              <div className="icon-box cpp-icon">
-                <Icons.Code />
+              <div className="icon-box network-icon">
+                <Icons.Network />
               </div>
               <span className="status-pill online">ONLINE</span>
             </div>
             
-            <h3>Legacy C/C++ Lab</h3>
+            <h3>Networks Lab</h3>
             
             <p className="desc">
-              Optimized environment for Data Structures & Algorithms with GCC, G++, and 
-              GDB debugger pre-installed. Features one-click compile and run with F5. 
-              No command-line compilation required—just write code and execute.
+              NS-2 Network Simulator with NAM (Network Animator) for protocol visualization. 
+              Execute TCL scripts to simulate network topologies, analyze packet flow, and 
+              visualize protocols.
             </p>
 
-            <div className="specs">
-              <span>COMPILER: GCC</span>
-              <span>DEBUG: GDB</span>
+            <div className="specs network-specs">
+              <span>SIM: NS-2</span>
+              <span>VISUAL: NAM</span>
             </div>
 
-            {!cppUrl ? (
+            {!cnUrl ? (
               <button 
-                onClick={launchCpp} 
-                disabled={loadingCpp} 
-                className="action-btn launch-btn"
+                onClick={launchCn} 
+                disabled={loadingCn} 
+                className="action-btn network-launch-btn"
               >
-                {loadingCpp ? (
-                  "INITIALIZING..."
+                {loadingCn ? (
+                  "SIMULATING..."
                 ) : (
                   <>
-                    <Icons.Rocket /> DEPLOY ENV
+                    <Icons.Rocket /> DEPLOY NS2 & CN
                   </>
                 )}
               </button>
             ) : (
               <a 
-                href={cppUrl} 
+                href={cnUrl} 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="action-btn access-btn"
+                className="action-btn network-access-btn"
               >
-                <Icons.Terminal /> OPEN EDITOR
+                <Icons.Terminal /> ENTER LAB
               </a>
             )}
           </div>

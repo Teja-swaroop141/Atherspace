@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from kubernetes import client, config
 import time
 import random
-import string  # <--- WAS MISSING
+import string
 import socket
 import urllib3
 
@@ -31,24 +31,39 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-def get_local_ip():
+def get_real_network_ip():
+    """
+    Connects to an external server (Google DNS) to find the interface 
+    used for the internet. This returns your actual Wi-Fi/Hotspot IP.
+    """
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        # Connect to a public DNS just to determine our own outgoing IP
+        # We don't actually send data, just tell the OS to figure out the route
+        s.connect(("8.8.8.8", 80))
+        ip = s.getsockname()[0]
+        s.close()
+        return ip
+    except Exception:
+        # If no internet, fall back to localhost
+        return "127.0.0.1"
+
+# Automatically set the Host IP
+# HOST_IP = get_real_network_ip()
+def get_real_ip():
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.connect(("8.8.8.8", 80))
         ip = s.getsockname()[0]
         s.close()
         return ip
     except:
         return "127.0.0.1"
-    
-    
-# HOST_IP = get_local_ip()
-HOST_IP = get_local_ip() # <-- USE THIS NEW LINE
-print(f"🌍 Server running on IP: {HOST_IP}")
+
+HOST_IP = "172.30.16.1"
+print(f"🌍 Server running on Real Network IP: {HOST_IP}")
 
 # --- 2. THE UNIVERSAL LAB ENGINE ---
-def create_lab_session(lab_prefix, image_name, container_port=8080, extra_args=None, privileged=False):
+def create_lab_session(lab_prefix, image_name, container_port=8080, extra_args=None, privileged=False, url_path=""):
     """
     Creates a Pod and a Service for a specific student lab.
     """
@@ -59,7 +74,7 @@ def create_lab_session(lab_prefix, image_name, container_port=8080, extra_args=N
     # 2. Connect to Kubernetes
     v1 = client.CoreV1Api()
     
-    # 3. Security Context (For Cyber/Networks Lab)
+    # 3. Security Context
     security_context = {}
     if privileged:
         security_context = {
@@ -115,7 +130,8 @@ def create_lab_session(lab_prefix, image_name, container_port=8080, extra_args=N
         svc = v1.read_namespaced_service(name=f"{pod_name}-svc", namespace="default")
         node_port = svc.spec.ports[0].node_port
         
-        final_url = f"http://{HOST_IP}:{node_port}"
+        # Use the detected HOST_IP for the URL
+        final_url = f"http://{HOST_IP}:{node_port}{url_path}"
         print(f"✅ Lab Ready: {final_url}")
         
         return {
@@ -135,42 +151,37 @@ def create_lab_session(lab_prefix, image_name, container_port=8080, extra_args=N
 
 @app.post("/start-web-lab")
 def start_web_lab():
-    # ⚠️ FIXED: We REMOVED 'extra_args' here.
-    # The Dockerfile already has the full CMD (mongod + code-server), 
-    # so we must NOT overwrite it.
-    return create_lab_session(
-        "web-student", 
-        "zero-web-lab:latest", 
-        container_port=8080, 
-        extra_args=None  # <--- Set this to None!
-    )
+    return create_lab_session("web-student", "zero-web-lab:latest", container_port=8080, extra_args=None)
 
 @app.post("/start-python-lab")
 def start_python_lab():
-    # Python Lab
     return create_lab_session("python-student", "zero-simpleputhon-lab:latest", container_port=8080, extra_args=["--auth", "none"])
 
 @app.post("/start-sql-lab")
 def start_sql_lab():
-    # SQL Lab
     return create_lab_session("sql-student", "zero-sql-lab:latest", container_port=8080)
-
-@app.post("/start-cyber-lab")
-def start_cyber_lab():
-    # Cyber Lab needs ROOT/PRIVILEGED access and Port 6080
-    return create_lab_session("cyber-student", "zero-cyber-lab:latest", container_port=6080, privileged=True)
-
-@app.post("/start-cn-lab")
-def start_cn_lab():
-    # Networks Lab needs ROOT/PRIVILEGED access and Port 6080
-    return create_lab_session("cn-student", "zero-cn-lab:latest", container_port=6080, privileged=True)
 
 @app.post("/start-aiml-lab")
 def start_aiml_lab():
-    # AI/ML is complex, usually uses Jupyter on 8888. 
-    # If using the python image with Jupyter installed:
     return create_lab_session("aiml-student", "zero-python-lab:latest", container_port=8888, extra_args=[
         "start-notebook.sh", "--NotebookApp.token=''", "--NotebookApp.password=''"
     ])
 
-# Run with: uvicorn main:app --reload
+@app.post("/start-iot-lab")
+def start_iot_lab():
+    return create_lab_session(
+        "iot-student", 
+        "zero-iot-lab:latest", 
+        container_port=3000,   # <--- MUST BE 3000
+        privileged=True,
+        url_path=""            # <--- MUST BE EMPTY
+    )
+@app.post("/start-cyber-lab")
+def start_cyber_lab():
+    return create_lab_session("cyber-student", "zero-cyber-lab:latest", container_port=6080, privileged=True, url_path="/vnc.html?autoconnect=true")
+
+@app.post("/start-cn-lab")
+def start_cn_lab():
+    return create_lab_session("cn-student", "zero-cn-lab:latest", container_port=6080, privileged=True, url_path="/vnc.html?autoconnect=true")
+
+# Run command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload

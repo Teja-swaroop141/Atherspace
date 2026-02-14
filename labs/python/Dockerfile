@@ -33,4 +33,15 @@ RUN echo 'alias hello="python3 /home/coder/project/welcome.py"' >> /home/coder/.
 RUN chown -R coder:coder /home/coder/project/
 WORKDIR /home/coder/project
 
+# 8. Create startup script with delay
+USER root
+RUN echo "#!/bin/bash" > /start.sh && \
+    echo "echo '⏳ Initializing lab environment, please wait...'" >> /start.sh && \
+    echo "sleep 10" >> /start.sh && \
+    echo "exec /usr/bin/entrypoint.sh --bind-addr 0.0.0.0:8080 /home/coder/project" >> /start.sh && \
+    chmod +x /start.sh
+
 USER coder
+
+# Start with delay
+CMD ["/start.sh"]

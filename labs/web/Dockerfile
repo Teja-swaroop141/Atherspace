@@ -37,5 +37,7 @@ EXPOSE 8080 3000
 
 # 7. Start MongoDB and VS Code together
 # We use 'mongod' (the server) instead of the old service command
-CMD mongod --fork --logpath /var/log/mongod.log --bind_ip 0.0.0.0 && \
+CMD echo "⏳ Initializing lab environment, please wait..." && \
+    sleep 10 && \
+    mongod --fork --logpath /var/log/mongod.log --bind_ip 0.0.0.0 && \
     code-server --bind-addr 0.0.0.0:8080 --auth none /home/project

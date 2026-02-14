@@ -9,40 +9,40 @@ const API_BASE = `http://${window.location.hostname}:8000`;
 const Icons = {
   Python: () => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="40" height="40">
-      <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+      <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
     </svg>
   ),
   Database: () => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="40" height="40">
-      <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
-      <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
-      <ellipse cx="12" cy="5" rx="9" ry="3"/>
+      <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
+      <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
+      <ellipse cx="12" cy="5" rx="9" ry="3" />
     </svg>
   ),
   Security: () => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="40" height="40">
-      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-      <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
     </svg>
   ),
   Brain: () => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="40" height="40">
-      <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/>
-      <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/>
+      <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z" />
+      <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z" />
     </svg>
   ),
   Globe: () => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="40" height="40">
-      <circle cx="12" cy="12" r="10"/>
-      <line x1="2" y1="12" x2="22" y2="12"/>
-      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+      <circle cx="12" cy="12" r="10" />
+      <line x1="2" y1="12" x2="22" y2="12" />
+      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
     </svg>
   ),
   Network: () => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="40" height="40">
-      <circle cx="12" cy="12" r="10"/>
-      <line x1="2" y1="12" x2="22" y2="12"/>
-      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+      <circle cx="12" cy="12" r="10" />
+      <line x1="2" y1="12" x2="22" y2="12" />
+      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
     </svg>
   ),
   Chip: () => (
@@ -61,16 +61,23 @@ const Icons = {
   ),
   Rocket: () => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="20" height="20">
-      <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
-      <path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>
-      <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/>
-      <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>
+      <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" />
+      <path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z" />
+      <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" />
+      <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
     </svg>
   ),
   Terminal: () => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="20" height="20">
       <polyline points="4 17 10 11 4 5"></polyline>
       <line x1="12" y1="19" x2="20" y2="19"></line>
+    </svg>
+  ),
+  Container: () => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="40" height="40">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+      <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+      <line x1="12" y1="22.08" x2="12" y2="12" />
     </svg>
   )
 };
@@ -96,6 +103,9 @@ function App() {
 
   const [loadingIot, setLoadingIot] = useState(false);
   const [iotUrl, setIotUrl] = useState(null);
+
+  const [loadingDevops, setLoadingDevops] = useState(false);
+  const [devopsUrl, setDevopsUrl] = useState(null);
 
   // --- LAUNCH FUNCTIONS USING API_BASE ---
 
@@ -206,9 +216,24 @@ function App() {
     setLoadingCn(false);
   };
 
+  const launchDevops = async () => {
+    setLoadingDevops(true);
+    try {
+      const response = await axios.post(`${API_BASE}/start-devops-lab`);
+      if (response.data.status === "error") {
+        alert("❌ Error: " + response.data.message);
+      } else if (response.data.url) {
+        setDevopsUrl(response.data.url);
+      }
+    } catch (error) {
+      alert("⚠️ Connection Error");
+    }
+    setLoadingDevops(false);
+  };
+
   return (
     <div className="app-container">
-      
+
       {/* HEADER */}
       <header className="top-bar">
         <div className="logo">
@@ -230,13 +255,13 @@ function App() {
         <div className="intro-text">
           <h2>Command Deck</h2>
           <p>
-            Initialize a specialized neural environment to begin your mission. 
+            Initialize a specialized neural environment to begin your mission.
             All systems are pre-calibrated and ready for deployment.
           </p>
         </div>
 
         <div className="grid-layout">
-          
+
           {/* CARD 1: PYTHON CORE */}
           <div className="card active-card">
             <div className="scan-line"></div>
@@ -246,8 +271,8 @@ function App() {
             </div>
             <h3>Python Virtual Lab</h3>
             <p className="desc">
-              High-performance environment optimized for Data Science & AI tasks. 
-              Comes pre-installed with Pandas for data analysis, Rich for terminal 
+              High-performance environment optimized for Data Science & AI tasks.
+              Comes pre-installed with Pandas for data analysis, Rich for terminal
               aesthetics, and Streamlit for dashboards.
             </p>
             <div className="specs">
@@ -273,8 +298,8 @@ function App() {
             </div>
             <h3>SQL & DB Virtual Lab</h3>
             <p className="desc">
-              Production-ready MySQL database instance paired with the Adminer Web GUI. 
-              Includes pre-loaded complex college datasets to allow for immediate SQL 
+              Production-ready MySQL database instance paired with the Adminer Web GUI.
+              Includes pre-loaded complex college datasets to allow for immediate SQL
               querying and relational analysis.
             </p>
             <div className="specs">
@@ -300,7 +325,7 @@ function App() {
             </div>
             <h3>Cyber Virtual Lab</h3>
             <p className="desc">
-              Ubuntu Security Box equipped with Nmap, Netcat, and a hidden vulnerability 
+              Ubuntu Security Box equipped with Nmap, Netcat, and a hidden vulnerability
               target. Advanced penetration testing environment. Authorized personnel only.
             </p>
             <div className="specs cyber-specs">
@@ -326,8 +351,8 @@ function App() {
             </div>
             <h3>Data Science & AI Lab</h3>
             <p className="desc">
-              JupyterLab environment optimized for machine learning workflows. 
-              Pre-loaded with Pandas, NumPy, Matplotlib, and Scikit-learn. Includes 
+              JupyterLab environment optimized for machine learning workflows.
+              Pre-loaded with Pandas, NumPy, Matplotlib, and Scikit-learn. Includes
               Titanic dataset and sample visualization.
             </p>
             <div className="specs">
@@ -353,8 +378,8 @@ function App() {
             </div>
             <h3>Full-Stack Web Lab</h3>
             <p className="desc">
-              Complete MERN stack development environment with Node.js, React, and 
-              MongoDB pre-configured. Features live preview functionality that automatically 
+              Complete MERN stack development environment with Node.js, React, and
+              MongoDB pre-configured. Features live preview functionality that automatically
               exposes your React app.
             </p>
             <div className="specs">
@@ -380,8 +405,8 @@ function App() {
             </div>
             <h3>Networks Lab</h3>
             <p className="desc">
-              NS-2 Network Simulator with NAM (Network Animator) for protocol visualization. 
-              Execute TCL scripts to simulate network topologies, analyze packet flow, and 
+              NS-2 Network Simulator with NAM (Network Animator) for protocol visualization.
+              Execute TCL scripts to simulate network topologies, analyze packet flow, and
               visualize protocols.
             </p>
             <div className="specs network-specs">
@@ -409,8 +434,8 @@ function App() {
             </div>
             <h3>IoT & Robotics Lab</h3>
             <p className="desc">
-              Virtual Electronics workbench. Write code in Arduino IDE and simulate 
-              hardware in real-time using SimulIDE. Test circuits with virtual LEDs, 
+              Virtual Electronics workbench. Write code in Arduino IDE and simulate
+              hardware in real-time using SimulIDE. Test circuits with virtual LEDs,
               Motors, and LCDs.
             </p>
             <div className="specs">
@@ -423,6 +448,35 @@ function App() {
             ) : (
               <a href={iotUrl} target="_blank" rel="noopener noreferrer" className="action-btn access-btn" style={{ borderColor: '#FF9900', color: '#FF9900' }}>
                 <Icons.Terminal /> ENTER LAB
+              </a>
+            )}
+          </div>
+
+          {/* CARD 8: DEVOPS LAB */}
+          <div className="card active-card" style={{ borderColor: '#00D9FF' }}>
+            <div className="scan-line" style={{ background: 'linear-gradient(90deg, transparent, #00D9FF, transparent)' }}></div>
+            <div className="card-header">
+              <div className="icon-box" style={{ color: '#00D9FF', borderColor: '#00D9FF' }}>
+                <Icons.Container />
+              </div>
+              <span className="status-pill online">ONLINE</span>
+            </div>
+            <h3>DevOps & Container Lab</h3>
+            <p className="desc">
+              Docker-in-Docker environment with Portainer UI for container management.
+              Includes kubectl for Kubernetes orchestration. Build, deploy, and manage
+              containerized applications.
+            </p>
+            <div className="specs">
+              <span>DOCKER: DinD</span><span>UI: PORTAINER</span>
+            </div>
+            {!devopsUrl ? (
+              <button onClick={launchDevops} disabled={loadingDevops} className="action-btn launch-btn" style={{ borderColor: '#00D9FF', color: '#00D9FF', boxShadow: '0 0 15px rgba(0, 217, 255, 0.25)' }}>
+                {loadingDevops ? "ORCHESTRATING..." : <><Icons.Rocket /> DEPLOY LAB</>}
+              </button>
+            ) : (
+              <a href={devopsUrl} target="_blank" rel="noopener noreferrer" className="action-btn access-btn" style={{ borderColor: '#00D9FF', color: '#00D9FF' }}>
+                <Icons.Terminal /> OPEN PORTAINER
               </a>
             )}
           </div>

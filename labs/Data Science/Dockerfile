@@ -22,5 +22,16 @@ USER jovyan
 # Expose JupyterLab port
 EXPOSE 8888
 
-# Start JupyterLab without authentication
-CMD ["start-notebook.sh", "--NotebookApp.token=''", "--NotebookApp.password=''"]
+# Create startup script with delay (as root, in home directory)
+USER root
+RUN echo "#!/bin/bash" > /home/jovyan/start.sh && \
+    echo "echo '⏳ Initializing lab environment, please wait...'" >> /home/jovyan/start.sh && \
+    echo "sleep 10" >> /home/jovyan/start.sh && \
+    echo "start-notebook.sh --NotebookApp.token='' --NotebookApp.password=''" >> /home/jovyan/start.sh && \
+    chmod +x /home/jovyan/start.sh && \
+    chown jovyan:users /home/jovyan/start.sh
+
+USER jovyan
+
+# Start JupyterLab with delay
+CMD ["/home/jovyan/start.sh"]

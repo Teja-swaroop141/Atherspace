@@ -71,6 +71,8 @@ RUN ln -s /usr/share/novnc/vnc.html /usr/share/novnc/index.html
 
 # 7. Create Main Startup Script
 RUN echo "#!/bin/bash" > /start.sh && \
+    echo "echo '⏳ Initializing lab environment, please wait...'" >> /start.sh && \
+    echo "sleep 10" >> /start.sh && \
     echo "echo '🖥️ Starting VNC Server...'" >> /start.sh && \
     echo "vncserver :1 -geometry 1280x720 -depth 24" >> /start.sh && \
     echo "echo '🌐 Starting NoVNC Web Interface...'" >> /start.sh && \

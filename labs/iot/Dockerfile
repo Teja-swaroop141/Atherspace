@@ -6,6 +6,7 @@ FROM lscr.io/linuxserver/webtop:ubuntu-xfce
 ENV TITLE="ZeroSetup IoT Lab"
 ENV PUID=1000
 ENV PGID=1000
+ENV DISABLE_HTTPS=true
 
 # 1. Install Dependencies (Crucial for SimulIDE Drag-and-Drop)
 RUN apt-get update && apt-get install -y \
@@ -44,5 +45,15 @@ RUN mkdir -p /defaults/Desktop && \
     echo '[Desktop Entry]\nVersion=1.0\nType=Application\nName=SimulIDE\nExec=/opt/SimulIDE_0.4.15-SR10_Linux64/SimulIDE\nIcon=utilities-terminal\nTerminal=false\nStartupNotify=false' > /defaults/Desktop/SimulIDE.desktop && \
     chmod +x /defaults/Desktop/*.desktop
 
+# 5. Create custom init script with delay
+RUN echo "#!/bin/bash" > /custom-init.sh && \
+    echo "echo '⏳ Initializing lab environment, please wait...'" >> /custom-init.sh && \
+    echo "sleep 10" >> /custom-init.sh && \
+    echo "exec /init" >> /custom-init.sh && \
+    chmod +x /custom-init.sh
+
 # Port 3000 is the standard for Webtop
 EXPOSE 3000
+
+# Use custom init with delay
+CMD ["/custom-init.sh"]

@@ -97,7 +97,17 @@ def create_lab_session(lab_prefix, image_name, container_port=8080, extra_args=N
                 "imagePullPolicy": "Never",
                 "ports": [{"containerPort": container_port}],
                 "securityContext": security_context,
-                "args": extra_args if extra_args else []
+                "args": extra_args if extra_args else [],
+                "resources": {
+                    "requests": {
+                        "memory": "512Mi",
+                        "cpu": "250m"
+                    },
+                    "limits": {
+                        "memory": "4Gi",
+                        "cpu": "2000m"
+                    }
+                }
             }]
         }
     }
@@ -183,5 +193,9 @@ def start_cyber_lab():
 @app.post("/start-cn-lab")
 def start_cn_lab():
     return create_lab_session("cn-student", "zero-cn-lab:latest", container_port=6080, privileged=True, url_path="/vnc.html?autoconnect=true")
+
+@app.post("/start-devops-lab")
+def start_devops_lab():
+    return create_lab_session("devops-student", "zero-devops-lab:latest", container_port=9000, privileged=True, url_path="")
 
 # Run command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload

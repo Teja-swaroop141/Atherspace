@@ -4,7 +4,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV USER=root
 
 # 1. Install Desktop Environment (XFCE) & VNC
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --fix-missing \
     xfce4 \
     xfce4-goodies \
     tigervnc-standalone-server \
@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # 2. Install Hacker Tools
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --fix-missing \
     nmap \
     netcat \
     wireshark \
@@ -40,6 +40,8 @@ RUN ln -s /usr/share/novnc/vnc.html /usr/share/novnc/index.html
 
 # 5. Create Startup Script
 RUN echo "#!/bin/bash" > /start.sh && \
+    echo "echo '⏳ Initializing lab environment, please wait...'" >> /start.sh && \
+    echo "sleep 10" >> /start.sh && \
     echo "echo '🎯 Starting Vulnerable Target...'" >> /start.sh && \
     echo "cd /target && python3 -m http.server 9000 &" >> /start.sh && \
     echo "echo '🖥️ Starting VNC Server...'" >> /start.sh && \

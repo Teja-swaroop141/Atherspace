@@ -23,6 +23,8 @@ RUN sed -i 's/bind-address            = 127.0.0.1/bind-address = 0.0.0.0/' /etc/
 # 5. CREATE THE STARTUP SCRIPT INSIDE LINUX
 # We set the password to 'pass' so Adminer accepts the login.
 RUN echo "#!/bin/bash" > /start.sh && \
+    echo "echo '⏳ Initializing lab environment, please wait...'" >> /start.sh && \
+    echo "sleep 10" >> /start.sh && \
     echo "echo '🚀 Starting MySQL...'" >> /start.sh && \
     echo "service mariadb start" >> /start.sh && \
     echo "sleep 5" >> /start.sh && \

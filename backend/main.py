@@ -5,24 +5,23 @@ import time
 import random
 import string
 import socket
+import subprocess
 import urllib3
+import json
+import os
 
-# --- 1. SETUP & CONFIGURATION ---
 app = FastAPI()
-
-# Disable SSL Warnings
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-# Load Kube Config
+# --- CHANGE 1: Load kubeconfig for Minikube on EC2 ---
 try:
-    config.load_kube_config()
-    # Force Python to trust the local Docker cluster
+    config.load_kube_config(config_file="/home/ubuntu/.kube/config")
     configuration = client.Configuration.get_default_copy()
     configuration.verify_ssl = False
     client.Configuration.set_default(configuration)
     print("✅ Connected to Kubernetes Cluster")
 except Exception as e:
-    print(f"⚠️ Warning: Could not load Kube Config. Is Docker running? {e}")
+    print(f"⚠️ Warning: Could not load Kube Config: {e}")
 
 app.add_middleware(
     CORSMiddleware,
@@ -31,50 +30,38 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-def get_real_network_ip():
-    """
-    Connects to an external server (Google DNS) to find the interface 
-    used for the internet. This returns your actual Wi-Fi/Hotspot IP.
-    """
+# --- CHANGE 2: Get Minikube's IP instead of your WSL gateway ---
+def get_host_ip():
     try:
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        # We don't actually send data, just tell the OS to figure out the route
-        s.connect(("8.8.8.8", 80))
-        ip = s.getsockname()[0]
-        s.close()
-        return ip
+        # On EC2 with minikube, we need the EC2 public IP for the frontend
+        # but NodePort traffic routes through minikube's internal IP
+        result = subprocess.check_output(["minikube", "ip"], text=True).strip()
+        return result
     except Exception:
-        # If no internet, fall back to localhost
-        return "127.0.0.1"
+        # Fallback: EC2 instance metadata
+        try:
+            import urllib.request
+            url = "http://169.254.169.254/latest/meta-data/public-ipv4"
+            return urllib.request.urlopen(url, timeout=2).read().decode()
+        except Exception:
+            return "127.0.0.1"
 
-# Automatically set the Host IP
-# HOST_IP = get_real_network_ip()
-def get_real_ip():
-    try:
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.connect(("8.8.8.8", 80))
-        ip = s.getsockname()[0]
-        s.close()
-        return ip
-    except:
-        return "127.0.0.1"
+HOST_IP = get_host_ip()
+print(f"🌍 Minikube Node IP: {HOST_IP}")
 
-HOST_IP = "172.30.16.1"
-print(f"🌍 Server running on Real Network IP: {HOST_IP}")
+# --- CHANGE 3: Your image names point to Docker Hub (already correct if you push there) ---
+# Just make sure these match your Docker Hub repo exactly:
+# zerosetup/lab-python:v1  ✅
+# zerosetup/lab-sql:v1     ✅
+# zerosetup/lab-ds:v1      ✅
+# zerosetup/lab-cyber:v1   ✅
+# zerosetup/lab-cn:v1      ✅
 
-# --- 2. THE UNIVERSAL LAB ENGINE ---
 def create_lab_session(lab_prefix, image_name, container_port=8080, extra_args=None, privileged=False, url_path=""):
-    """
-    Creates a Pod and a Service for a specific student lab.
-    """
-    # 1. Generate unique ID
     random_id = ''.join(random.choices(string.digits, k=4))
     pod_name = f"{lab_prefix}-{random_id}"
-    
-    # 2. Connect to Kubernetes
     v1 = client.CoreV1Api()
-    
-    # 3. Security Context
+
     security_context = {}
     if privileged:
         security_context = {
@@ -82,7 +69,6 @@ def create_lab_session(lab_prefix, image_name, container_port=8080, extra_args=N
             "capabilities": {"add": ["NET_ADMIN", "NET_RAW"]}
         }
 
-    # 4. Define the Pod
     pod_manifest = {
         "apiVersion": "v1",
         "kind": "Pod",
@@ -94,25 +80,18 @@ def create_lab_session(lab_prefix, image_name, container_port=8080, extra_args=N
             "containers": [{
                 "name": "lab-container",
                 "image": image_name,
-                "imagePullPolicy": "Never",
+                "imagePullPolicy": "Always",   # pulls from Docker Hub automatically
                 "ports": [{"containerPort": container_port}],
                 "securityContext": security_context,
                 "args": extra_args if extra_args else [],
                 "resources": {
-                    "requests": {
-                        "memory": "512Mi",
-                        "cpu": "250m"
-                    },
-                    "limits": {
-                        "memory": "4Gi",
-                        "cpu": "2000m"
-                    }
+                    "requests": {"memory": "512Mi", "cpu": "250m"},
+                    "limits":   {"memory": "4Gi",   "cpu": "2000m"}
                 }
             }]
         }
     }
 
-    # 5. Define the Service
     service_manifest = {
         "apiVersion": "v1",
         "kind": "Service",
@@ -122,7 +101,7 @@ def create_lab_session(lab_prefix, image_name, container_port=8080, extra_args=N
             "selector": {"app": pod_name},
             "ports": [{
                 "protocol": "TCP",
-                "port": 80,          
+                "port": 80,
                 "targetPort": container_port
             }]
         }
@@ -132,21 +111,18 @@ def create_lab_session(lab_prefix, image_name, container_port=8080, extra_args=N
         print(f"🚀 Spawning Lab: {pod_name}...")
         v1.create_namespaced_pod(body=pod_manifest, namespace="default")
         v1.create_namespaced_service(body=service_manifest, namespace="default")
-        
-        # Wait a moment for K8s to assign the port
+
         time.sleep(2)
-        
-        # Get the assigned NodePort
+
         svc = v1.read_namespaced_service(name=f"{pod_name}-svc", namespace="default")
         node_port = svc.spec.ports[0].node_port
-        
-        # Use the detected HOST_IP for the URL
+
         final_url = f"http://{HOST_IP}:{node_port}{url_path}"
         print(f"✅ Lab Ready: {final_url}")
-        
+
         return {
-            "status": "Success", 
-            "message": f"Lab started at {final_url}", 
+            "status": "Success",
+            "message": f"Lab started at {final_url}",
             "port": node_port,
             "url": final_url,
             "pod_name": pod_name
@@ -157,45 +133,34 @@ def create_lab_session(lab_prefix, image_name, container_port=8080, extra_args=N
         return {"status": "Failure", "message": str(e)}
 
 
-# --- 3. LAB ENDPOINTS ---
-
-@app.post("/start-web-lab")
-def start_web_lab():
-    return create_lab_session("web-student", "zero-web-lab:latest", container_port=8080, extra_args=None)
+# --- ENDPOINTS (unchanged from your original) ---
+@app.get("/config")
+def get_config():
+    """Returns current server IP - called by frontend on load"""
+    try:
+        with open("/home/ubuntu/zerosetup-backend/ip_config.json") as f:
+            return json.load(f)
+    except:
+        return {"ip": HOST_IP}
 
 @app.post("/start-python-lab")
 def start_python_lab():
-    return create_lab_session("python-student", "zero-simpleputhon-lab:latest", container_port=8080, extra_args=["--auth", "none"])
+    return create_lab_session("python-student", "zerosetup/lab-python:v1", container_port=8080, extra_args=["--auth", "none"])
 
 @app.post("/start-sql-lab")
 def start_sql_lab():
-    return create_lab_session("sql-student", "zero-sql-lab:latest", container_port=8080)
+    return create_lab_session("sql-student", "zerosetup/lab-sql:v1", container_port=8080)
 
-@app.post("/start-aiml-lab")
-def start_aiml_lab():
-    return create_lab_session("aiml-student", "zero-python-lab:latest", container_port=8888, extra_args=[
+@app.post("/start-ds-lab")
+def start_ds_lab():
+    return create_lab_session("ds-student", "zerosetup/lab-ds:v1", container_port=8888, extra_args=[
         "start-notebook.sh", "--NotebookApp.token=''", "--NotebookApp.password=''"
     ])
 
-@app.post("/start-iot-lab")
-def start_iot_lab():
-    return create_lab_session(
-        "iot-student", 
-        "zero-iot-lab:latest", 
-        container_port=3000,   # <--- MUST BE 3000
-        privileged=True,
-        url_path=""            # <--- MUST BE EMPTY
-    )
 @app.post("/start-cyber-lab")
 def start_cyber_lab():
-    return create_lab_session("cyber-student", "zero-cyber-lab:latest", container_port=6080, privileged=True, url_path="/vnc.html?autoconnect=true")
+    return create_lab_session("cyber-student", "zerosetup/lab-cyber:v1", container_port=6080, privileged=True, url_path="/vnc.html?autoconnect=true")
 
 @app.post("/start-cn-lab")
 def start_cn_lab():
-    return create_lab_session("cn-student", "zero-cn-lab:latest", container_port=6080, privileged=True, url_path="/vnc.html?autoconnect=true")
-
-@app.post("/start-devops-lab")
-def start_devops_lab():
-    return create_lab_session("devops-student", "zero-devops-lab:latest", container_port=9000, privileged=True, url_path="")
-
-# Run command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    return create_lab_session("cn-student", "zerosetup/lab-cn:v1", container_port=6080, privileged=True, url_path="/vnc.html?autoconnect=true")

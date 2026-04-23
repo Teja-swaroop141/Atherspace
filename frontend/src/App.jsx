@@ -3,7 +3,7 @@ import axios from 'axios';
 import './App.css';
 
 // Automatically use the IP that the website is loaded from for the API connection
-const API_BASE = `http://${window.location.hostname}:8000`;
+const API_BASE = process.env.REACT_APP_API_URL || `http://${window.location.hostname}:8000`;
 
 // --- ICONS ---
 const Icons = {
@@ -95,17 +95,8 @@ function App() {
   const [loadingJupyter, setLoadingJupyter] = useState(false);
   const [jupyterUrl, setJupyterUrl] = useState(null);
 
-  const [loadingMern, setLoadingMern] = useState(false);
-  const [mernUrl, setMernUrl] = useState(null);
-
   const [loadingCn, setLoadingCn] = useState(false);
   const [cnUrl, setCnUrl] = useState(null);
-
-  const [loadingIot, setLoadingIot] = useState(false);
-  const [iotUrl, setIotUrl] = useState(null);
-
-  const [loadingDevops, setLoadingDevops] = useState(false);
-  const [devopsUrl, setDevopsUrl] = useState(null);
 
   // --- LAUNCH FUNCTIONS USING API_BASE ---
 
@@ -125,20 +116,6 @@ function App() {
     setLoadingPy(false);
   };
 
-  const launchIot = async () => {
-    setLoadingIot(true);
-    try {
-      const response = await axios.post(`${API_BASE}/start-iot-lab`);
-      if (response.data.status === "error") {
-        alert("❌ Error: " + response.data.message);
-      } else if (response.data.url) {
-        setIotUrl(response.data.url);
-      }
-    } catch (error) {
-      alert("⚠️ Connection Error");
-    }
-    setLoadingIot(false);
-  };
 
   const launchSQL = async () => {
     setLoadingSql(true);
@@ -173,7 +150,7 @@ function App() {
   const launchJupyter = async () => {
     setLoadingJupyter(true);
     try {
-      const response = await axios.post(`${API_BASE}/start-aiml-lab`);
+      const response = await axios.post(`${API_BASE}/start-ds-lab`);
       if (response.data.status === "error") {
         alert("❌ Error: " + response.data.message);
       } else if (response.data.url) {
@@ -185,21 +162,6 @@ function App() {
     setLoadingJupyter(false);
   };
 
-  const launchMern = async () => {
-    setLoadingMern(true);
-    try {
-      const response = await axios.post(`${API_BASE}/start-web-lab`);
-      if (response.data.status === "error") {
-        alert("❌ Error: " + response.data.message);
-      } else if (response.data.url) {
-        setMernUrl(response.data.url);
-      }
-    } catch (error) {
-      console.error(error);
-      alert("⚠️ Connection Error: Is the backend running?");
-    }
-    setLoadingMern(false);
-  };
 
   const launchCn = async () => {
     setLoadingCn(true);
@@ -216,20 +178,6 @@ function App() {
     setLoadingCn(false);
   };
 
-  const launchDevops = async () => {
-    setLoadingDevops(true);
-    try {
-      const response = await axios.post(`${API_BASE}/start-devops-lab`);
-      if (response.data.status === "error") {
-        alert("❌ Error: " + response.data.message);
-      } else if (response.data.url) {
-        setDevopsUrl(response.data.url);
-      }
-    } catch (error) {
-      alert("⚠️ Connection Error");
-    }
-    setLoadingDevops(false);
-  };
 
   return (
     <div className="app-container">
@@ -369,32 +317,6 @@ function App() {
             )}
           </div>
 
-          {/* CARD 5: FULL-STACK WEB LAB */}
-          <div className="card active-card web-card">
-            <div className="scan-line web-scan"></div>
-            <div className="card-header">
-              <div className="icon-box mern-icon"><Icons.Globe /></div>
-              <span className="status-pill online">ONLINE</span>
-            </div>
-            <h3>Full-Stack Web Lab</h3>
-            <p className="desc">
-              Complete MERN stack development environment with Node.js, React, and
-              MongoDB pre-configured. Features live preview functionality that automatically
-              exposes your React app.
-            </p>
-            <div className="specs">
-              <span>STACK: MERN</span><span>PREVIEW: LIVE</span>
-            </div>
-            {!mernUrl ? (
-              <button onClick={launchMern} disabled={loadingMern} className="action-btn launch-btn">
-                {loadingMern ? "PROVISIONING..." : <><Icons.Rocket /> DEPLOY STACK</>}
-              </button>
-            ) : (
-              <a href={mernUrl} target="_blank" rel="noopener noreferrer" className="action-btn access-btn">
-                <Icons.Terminal /> OPEN IDE
-              </a>
-            )}
-          </div>
 
           {/* CARD 6: NETWORKS LAB */}
           <div className="card active-card network-card">
@@ -423,63 +345,6 @@ function App() {
             )}
           </div>
 
-          {/* CARD 7: IOT & ROBOTICS LAB */}
-          <div className="card active-card">
-            <div className="scan-line"></div>
-            <div className="card-header">
-              <div className="icon-box" style={{ color: '#FF9900', borderColor: '#FF9900' }}>
-                <Icons.Chip />
-              </div>
-              <span className="status-pill online">ONLINE</span>
-            </div>
-            <h3>IoT & Robotics Lab</h3>
-            <p className="desc">
-              Virtual Electronics workbench. Write code in Arduino IDE and simulate
-              hardware in real-time using SimulIDE. Test circuits with virtual LEDs,
-              Motors, and LCDs.
-            </p>
-            <div className="specs">
-              <span>IDE: ARDUINO</span><span>SIM: SIMULIDE</span>
-            </div>
-            {!iotUrl ? (
-              <button onClick={launchIot} disabled={loadingIot} className="action-btn launch-btn" style={{ borderColor: '#FF9900', color: '#FF9900', boxShadow: '0 0 15px rgba(255, 153, 0, 0.25)' }}>
-                {loadingIot ? "ASSEMBLING..." : <><Icons.Rocket /> DEPLOY LAB</>}
-              </button>
-            ) : (
-              <a href={iotUrl} target="_blank" rel="noopener noreferrer" className="action-btn access-btn" style={{ borderColor: '#FF9900', color: '#FF9900' }}>
-                <Icons.Terminal /> ENTER LAB
-              </a>
-            )}
-          </div>
-
-          {/* CARD 8: DEVOPS LAB */}
-          <div className="card active-card" style={{ borderColor: '#00D9FF' }}>
-            <div className="scan-line" style={{ background: 'linear-gradient(90deg, transparent, #00D9FF, transparent)' }}></div>
-            <div className="card-header">
-              <div className="icon-box" style={{ color: '#00D9FF', borderColor: '#00D9FF' }}>
-                <Icons.Container />
-              </div>
-              <span className="status-pill online">ONLINE</span>
-            </div>
-            <h3>DevOps & Container Lab</h3>
-            <p className="desc">
-              Docker-in-Docker environment with Portainer UI for container management.
-              Includes kubectl for Kubernetes orchestration. Build, deploy, and manage
-              containerized applications.
-            </p>
-            <div className="specs">
-              <span>DOCKER: DinD</span><span>UI: PORTAINER</span>
-            </div>
-            {!devopsUrl ? (
-              <button onClick={launchDevops} disabled={loadingDevops} className="action-btn launch-btn" style={{ borderColor: '#00D9FF', color: '#00D9FF', boxShadow: '0 0 15px rgba(0, 217, 255, 0.25)' }}>
-                {loadingDevops ? "ORCHESTRATING..." : <><Icons.Rocket /> DEPLOY LAB</>}
-              </button>
-            ) : (
-              <a href={devopsUrl} target="_blank" rel="noopener noreferrer" className="action-btn access-btn" style={{ borderColor: '#00D9FF', color: '#00D9FF' }}>
-                <Icons.Terminal /> OPEN PORTAINER
-              </a>
-            )}
-          </div>
 
         </div>
       </main>

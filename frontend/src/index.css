@@ -1,416 +1,128 @@
-/* --- GLOBAL RESETS --- */
-* {
-  box-sizing: border-box;
-}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
-body {
-  margin: 0;
-  padding: 0;
-  background-color: #0a0a0a;
-  color: #ffffff;
-  font-family: 'Segoe UI', 'Roboto', Helvetica, Arial, sans-serif;
-  overflow-x: hidden;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* --- DEEP SPACE BACKGROUND --- */
-.app-container {
-  min-height: 100vh;
-  background: 
-    radial-gradient(circle at 20% 50%, rgba(0, 255, 255, 0.12) 0%, transparent 40%), 
-    radial-gradient(circle at 80% 20%, rgba(180, 0, 255, 0.12) 0%, transparent 40%);
-  display: flex;
-  flex-direction: column;
-  position: relative;
-}
+/* AtherSpace design tokens — soft white + signature blue, inspired by editorial SaaS landing pages.
+   All colors are HSL. */
 
-.app-container::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: 
-    radial-gradient(white, rgba(255,255,255,.8) 1.5px, transparent 2px),
-    radial-gradient(white, rgba(255,255,255,.8) 1px, transparent 1.5px);
-  background-size: 400px 400px, 200px 200px;
-  opacity: 0.5;
-  z-index: -1;
-  animation: stars 200s linear infinite;
-}
+@layer base {
+  :root {
+    /* Surfaces */
+    --background: 220 33% 98%;        /* #F7F8FB-ish */
+    --foreground: 222 47% 9%;         /* deep ink */
 
-@keyframes stars {
-  from {
-    background-position: 0 0, 0 0;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 9%;
+
+    /* Brand */
+    --primary: 226 100% 59%;          /* AtherSpace blue ~#2F5BFF */
+    --primary-foreground: 0 0% 100%;
+    --primary-soft: 226 100% 96%;     /* tint for chips/cards */
+    --primary-glow: 226 100% 70%;
+
+    --secondary: 220 25% 96%;
+    --secondary-foreground: 222 47% 9%;
+
+    --muted: 220 20% 95%;
+    --muted-foreground: 220 12% 45%;
+
+    --accent: 226 100% 96%;
+    --accent-foreground: 226 80% 30%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 20% 90%;
+    --input: 220 20% 90%;
+    --ring: 226 100% 59%;
+
+    --radius: 1rem;
+
+    /* Semantic gradients & shadows */
+    --gradient-hero: radial-gradient(1200px 600px at 50% -10%, hsl(226 100% 95%) 0%, transparent 60%);
+    --gradient-cta: linear-gradient(135deg, hsl(226 100% 59%) 0%, hsl(232 90% 52%) 100%);
+    --shadow-card: 0 1px 2px hsl(222 47% 9% / 0.04), 0 8px 24px -12px hsl(226 100% 40% / 0.12);
+    --shadow-pop: 0 10px 40px -10px hsl(226 100% 40% / 0.35);
+
+    /* Dotted grid background */
+    --dot-color: 226 80% 80%;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
-  to {
-    background-position: 400px 400px, 200px 200px;
-  }
-}
 
-/* --- HEADER --- */
-.top-bar {
-  height: 80px;
-  background: rgba(15, 15, 25, 0.85);
-  border-bottom: 1px solid rgba(0, 255, 255, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 50px;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 0 20px rgba(0, 255, 255, 0.15);
-  z-index: 100;
-  flex-shrink: 0;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-}
-
-.logo h1 {
-  font-size: 28px;
-  letter-spacing: 4px;
-  margin: 0;
-  font-weight: 900;
-  color: white;
-  text-shadow: 0 0 10px rgba(255,255,255,0.5);
-}
-
-.logo small {
-  color: #33ffff;
-  font-size: 12px;
-  font-weight: bold;
-  margin-left: 15px;
-  border: 1px solid #33ffff;
-  padding: 4px 8px;
-  border-radius: 4px;
-  box-shadow: 0 0 10px #33ffff;
-}
-
-.status-indicators {
-  font-family: 'Courier New', monospace;
-  font-size: 13px;
-  color: #33ffff;
-  display: flex;
-  gap: 30px;
-  font-weight: bold;
-}
-
-/* --- DASHBOARD --- */
-.dashboard {
-  flex: 1;
-  padding: 60px;
-  max-width: 1600px;
-  margin: 0 auto;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.intro-text {
-  margin-bottom: 40px;
-}
-
-.intro-text h2 {
-  font-size: 50px;
-  margin: 0 0 15px 0;
-  font-weight: 800;
-  color: white;
-  text-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
-}
-
-.intro-text p {
-  color: #b3f5fc;
-  font-size: 20px;
-  max-width: 700px;
-  margin: 0;
-}
-
-/* --- GRID SYSTEM --- */
-.grid-layout {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 40px;
-  align-items: start;
-}
-
-/* --- CARD DESIGN --- */
-.card {
-  background: rgba(20, 20, 35, 0.75);
-  border: 1px solid rgba(0, 255, 255, 0.3);
-  border-radius: 20px;
-  padding: 40px;
-  position: relative;
-  overflow: hidden;
-  backdrop-filter: blur(20px);
-  transition: all 0.4s ease;
-  display: flex;
-  flex-direction: column;
-  min-height: 550px;
-  height: 100%;
-}
-
-.active-card:hover {
-  transform: translateY(-8px);
-  border-color: #33ffff;
-  box-shadow: 0 0 50px rgba(0, 255, 255, 0.25);
-}
-
-/* Cyber Card Specific Styling */
-.cyber-card {
-  border-color: rgba(255, 0, 0, 0.3);
-}
-
-.cyber-card:hover {
-  border-color: #ff4444;
-  box-shadow: 0 0 50px rgba(255, 0, 0, 0.25);
-}
-
-/* --- SCAN LINE ANIMATION --- */
-.scan-line {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 5px;
-  background: linear-gradient(90deg, transparent, #33ffff, transparent);
-  box-shadow: 0 0 10px #33ffff;
-  opacity: 0;
-  z-index: 10;
-}
-
-.active-card:hover .scan-line {
-  opacity: 1;
-  animation: scan 3s linear infinite;
-}
-
-.cyber-scan {
-  background: linear-gradient(90deg, transparent, #ff4444, transparent);
-  box-shadow: 0 0 10px #ff4444;
-}
-
-@keyframes scan {
-  0% {
-    top: -10%;
-  }
-  100% {
-    top: 110%;
+  .dark {
+    --background: 222 47% 6%;
+    --foreground: 210 40% 98%;
+    --card: 222 47% 8%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222 47% 8%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 226 100% 65%;
+    --primary-foreground: 222 47% 6%;
+    --primary-soft: 226 60% 18%;
+    --primary-glow: 226 100% 75%;
+    --secondary: 217 32% 17%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217 32% 17%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 217 32% 17%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217 32% 17%;
+    --input: 217 32% 17%;
+    --ring: 226 100% 65%;
   }
 }
 
-/* --- CONTENT --- */
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 25px;
-  flex-shrink: 0;
-}
-
-.icon-box {
-  width: 70px;
-  height: 70px;
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  flex-shrink: 0;
-}
-
-.python-icon {
-  color: #FFD700;
-  text-shadow: 0 0 15px #FFD700;
-}
-
-.sql-icon {
-  color: #33ffff;
-  text-shadow: 0 0 15px #33ffff;
-}
-
-.cyber-icon {
-  color: #ff4444;
-  background: rgba(255, 0, 0, 0.1);
-  text-shadow: 0 0 15px #ff4444;
-}
-
-.status-pill {
-  font-size: 11px;
-  font-weight: 900;
-  padding: 6px 12px;
-  border-radius: 4px;
-  letter-spacing: 2px;
-  flex-shrink: 0;
-}
-
-.online {
-  background: rgba(0, 255, 0, 0.15);
-  color: #33ff33;
-  border: 1px solid #33ff33;
-  box-shadow: 0 0 10px #33ff33;
-}
-
-.restricted {
-  background: rgba(255, 0, 0, 0.15);
-  color: #ff4444;
-  border: 1px solid #ff4444;
-  box-shadow: 0 0 10px #ff4444;
-}
-
-.card h3 {
-  font-size: 30px;
-  font-weight: 800;
-  margin: 0 0 15px 0;
-  color: white;
-  flex-shrink: 0;
-}
-
-/* --- FIXED HEIGHT DESCRIPTION --- */
-.desc {
-  color: #d4d4d4;
-  font-size: 16px;
-  line-height: 1.6;
-  height: 120px;
-  overflow: hidden;
-  margin-bottom: 20px;
-  flex-shrink: 0;
-}
-
-.specs {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-  font-family: 'Courier New', monospace;
-  font-size: 12px;
-  color: #33ffff;
-  border-top: 1px solid rgba(255,255,255,0.15);
-  padding-top: 20px;
-  margin-top: auto;
-  margin-bottom: 30px;
-  flex-shrink: 0;
-}
-
-.cyber-specs {
-  color: #ff4444;
-}
-
-/* --- BUTTONS --- */
-.action-btn {
-  width: 100%;
-  padding: 20px;
-  border: none;
-  font-weight: 800;
-  cursor: pointer;
-  letter-spacing: 2px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 15px;
-  text-decoration: none;
-  font-size: 14px;
-  text-transform: uppercase;
-  transition: all 0.4s ease;
-  border-radius: 8px;
-  flex-shrink: 0;
-  font-family: 'Segoe UI', 'Roboto', Helvetica, Arial, sans-serif;
-}
-
-/* Neon Blue Button - Python & SQL */
-.launch-btn {
-  background: #000;
-  color: #33ffff;
-  border: 2px solid #33ffff;
-  box-shadow: 0 0 15px rgba(0, 255, 255, 0.25);
-}
-
-.launch-btn:hover {
-  background: #33ffff;
-  color: #000;
-  box-shadow: 0 0 40px rgba(0, 255, 255, 0.8);
-  transform: scale(1.02);
-}
-
-.launch-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-/* Neon Green Button - Access */
-.access-btn {
-  background: #000;
-  color: #33ff33;
-  border: 2px solid #33ff33;
-  box-shadow: 0 0 15px rgba(0, 255, 0, 0.25);
-}
-
-.access-btn:hover {
-  background: #33ff33;
-  color: #000;
-  box-shadow: 0 0 40px rgba(0, 255, 0, 0.8);
-  transform: scale(1.02);
-}
-
-/* Neon Red Button - Cyber Launch */
-.cyber-launch-btn {
-  background: #000;
-  color: #ff4444;
-  border: 2px solid #ff4444;
-  box-shadow: 0 0 15px rgba(255, 0, 0, 0.25);
-}
-
-.cyber-launch-btn:hover {
-  background: #ff4444;
-  color: #000;
-  box-shadow: 0 0 40px rgba(255, 0, 0, 0.8);
-  transform: scale(1.02);
-}
-
-.cyber-launch-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-/* Cyber Access Button */
-.cyber-access-btn {
-  background: #ff4444;
-  color: #fff;
-  border: 2px solid #ff4444;
-  box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
-}
-
-.cyber-access-btn:hover {
-  background: #ff6666;
-  box-shadow: 0 0 40px rgba(255, 0, 0, 0.8);
-  transform: scale(1.02);
-}
-
-/* Responsive Design */
-@media (max-width: 1200px) {
-  .grid-layout {
-    grid-template-columns: repeat(2, 1fr);
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4 {
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    letter-spacing: -0.02em;
+  }
+  .font-mono {
+    font-family: 'JetBrains Mono', monospace;
   }
 }
 
-@media (max-width: 768px) {
-  .grid-layout {
-    grid-template-columns: 1fr;
+@layer utilities {
+  .bg-dot-grid {
+    background-image: radial-gradient(hsl(var(--dot-color) / 0.4) 1px, transparent 1px);
+    background-size: 22px 22px;
   }
-  
-  .top-bar {
-    padding: 0 20px;
+  .bg-hero-glow {
+    background-image: var(--gradient-hero);
   }
-  
-  .dashboard {
-    padding: 30px 20px;
+  .bg-gradient-cta {
+    background-image: var(--gradient-cta);
   }
-  
-  .intro-text h2 {
-    font-size: 36px;
+  .shadow-card {
+    box-shadow: var(--shadow-card);
   }
-  
-  .intro-text p {
-    font-size: 16px;
+  .shadow-pop {
+    box-shadow: var(--shadow-pop);
   }
 }

@@ -216,17 +216,17 @@ def stop_lab(pod_name: str):
 
 @app.post("/start-python-lab")
 def start_python_lab():
-    return create_lab_session("python-student", "zerosetup/lab-python:v1",
+    return create_lab_session("python-student", "tejaswaroop29/lab-python:v1",
                               container_port=8080, extra_args=["--auth", "none"])
 
 @app.post("/start-sql-lab")
 def start_sql_lab():
-    return create_lab_session("sql-student", "zerosetup/lab-sql:v1",
+    return create_lab_session("sql-student", "tejaswaroop29/lab-sql:v1",
                               container_port=8080)
 
 @app.post("/start-ds-lab")
 def start_ds_lab():
-    return create_lab_session("ds-student", "zerosetup/lab-ds:v1",
+    return create_lab_session("ds-student", "tejaswaroop29/lab-ds:v1",
                               container_port=8888,
                               extra_args=["start-notebook.sh",
                                           "--NotebookApp.token=''",
@@ -234,12 +234,12 @@ def start_ds_lab():
 
 @app.post("/start-cyber-lab")
 def start_cyber_lab():
-    return create_lab_session("cyber-student", "zerosetup/lab-cyber:v1",
+    return create_lab_session("cyber-student", "tejaswaroop29/lab-cyber:v1",
                               container_port=6080, privileged=True,
                               url_path="/vnc.html?autoconnect=true")
 
 @app.post("/start-cn-lab")
 def start_cn_lab():
-    return create_lab_session("cn-student", "zerosetup/lab-cn:v1",
+    return create_lab_session("cn-student", "tejaswaroop29/lab-cn:v1",
                               container_port=6080, privileged=True,
                               url_path="/vnc.html?autoconnect=true")

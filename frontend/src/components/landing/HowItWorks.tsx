@@ -29,10 +29,10 @@ const HowItWorks = () => (
       <ol className="mt-14 grid gap-6 md:grid-cols-3">
         {steps.map((s, i) => (
           <li key={s.title} className="relative rounded-2xl border border-border bg-card p-6 shadow-card">
-            <div className="absolute -top-3 left-6 text-xs font-mono text-primary bg-card border border-primary/20 px-2 py-0.5 rounded-full">
+            <div className="absolute -top-3 left-6 text-xs font-mono text-brand bg-card border border-brand/20 px-2 py-0.5 rounded-full">
               0{i + 1}
             </div>
-            <div className="h-11 w-11 rounded-xl bg-primary-soft text-primary flex items-center justify-center">
+            <div className="h-11 w-11 rounded-xl bg-brand-soft text-brand flex items-center justify-center">
               <s.icon size={20} />
             </div>
             <h3 className="mt-5 text-lg font-semibold">{s.title}</h3>
@@ -45,3 +45,4 @@ const HowItWorks = () => (
 );
 
 export default HowItWorks;
+

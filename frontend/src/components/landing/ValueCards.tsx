@@ -23,7 +23,7 @@ const ValueCards = () => {
     <section className="container py-20 md:py-28">
       <div className="text-center max-w-2xl mx-auto">
         <h2 className="text-3xl md:text-5xl font-bold leading-tight">
-          What You Get With <span className="text-primary">AtherSpace</span>
+          What You Get With <span className="text-brand">AtherSpace</span>
         </h2>
         <p className="mt-4 text-muted-foreground">
           Built for learners, students, and anyone who wants real environments without the
@@ -37,7 +37,7 @@ const ValueCards = () => {
             key={title}
             className="group relative rounded-2xl border border-border bg-card p-6 shadow-card hover:-translate-y-0.5 transition"
           >
-            <div className="h-11 w-11 rounded-xl bg-primary-soft text-primary flex items-center justify-center">
+            <div className="h-11 w-11 rounded-xl bg-brand-soft text-brand flex items-center justify-center">
               <Icon size={20} />
             </div>
             <h3 className="mt-5 text-lg font-semibold">{title}</h3>
@@ -50,3 +50,4 @@ const ValueCards = () => {
 };
 
 export default ValueCards;
+

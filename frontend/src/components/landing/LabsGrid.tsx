@@ -143,11 +143,11 @@ const LabsGrid = () => {
   return (
     <section id="labs" className="container py-20 md:py-28">
       <div className="text-center max-w-2xl mx-auto">
-        <div className="inline-flex items-center gap-2 rounded-full bg-primary-soft px-3 py-1 text-xs font-medium uppercase tracking-wider text-primary">
+        <div className="inline-flex items-center gap-2 rounded-full bg-brand-soft px-3 py-1 text-xs font-medium uppercase tracking-wider text-brand">
           The Labs
         </div>
         <h2 className="mt-4 text-3xl md:text-5xl font-bold leading-tight">
-          Five Labs. <span className="text-primary">One Click Away.</span>
+          Five Labs. <span className="text-brand">One Click Away.</span>
         </h2>
         <p className="mt-4 text-muted-foreground">
           Each lab spins up in its own container with everything pre-installed. Pick one
@@ -178,7 +178,7 @@ const LabsGrid = () => {
 
             {/* Copy */}
             <div>
-              <div className="h-12 w-12 rounded-2xl bg-primary-soft text-primary flex items-center justify-center">
+              <div className="h-12 w-12 rounded-2xl bg-brand-soft text-brand flex items-center justify-center">
                 <lab.icon size={22} />
               </div>
               <h3 className="mt-5 text-2xl md:text-3xl font-bold">{lab.name}</h3>
@@ -235,13 +235,13 @@ const LabVisual = ({ kind }: { kind: string }) => {
       return (
         <div className="font-mono text-[12px] leading-relaxed">
           <div className="text-muted-foreground"># notebook · py</div>
-          <div><span className="text-primary">def</span> greet(name):</div>
-          <div className="pl-4"><span className="text-primary">return</span> f<span className="text-accent-foreground">"hi, &#123;name&#125;"</span></div>
+          <div><span className="text-brand">def</span> greet(name):</div>
+          <div className="pl-4"><span className="text-brand">return</span> f<span className="text-accent-foreground">"hi, &#123;name&#125;"</span></div>
           <div className="mt-2">greet(<span className="text-accent-foreground">"ather"</span>)</div>
           <div className="text-muted-foreground">→ "hi, ather"</div>
           <div className="mt-3 flex gap-1">
             {[60, 35, 80, 45].map((w, i) => (
-              <div key={i} className="h-1 rounded-full bg-primary/30 flex-1" style={{ opacity: w / 100 }} />
+              <div key={i} className="h-1 rounded-full bg-brand/30 flex-1" style={{ opacity: w / 100 }} />
             ))}
           </div>
         </div>
@@ -252,7 +252,7 @@ const LabVisual = ({ kind }: { kind: string }) => {
           <div className="text-xs font-semibold mb-3">Iris classification · accuracy</div>
           <div className="flex items-end gap-2 h-32">
             {[48, 62, 71, 84, 90, 93, 96].map((h, i) => (
-              <div key={i} className="flex-1 rounded-t-md bg-gradient-to-t from-primary/40 to-primary" style={{ height: `${h}%` }} />
+              <div key={i} className="flex-1 rounded-t-md bg-gradient-to-t from-brand/40 to-brand" style={{ height: `${h}%` }} />
             ))}
           </div>
           <div className="mt-2 text-[10px] text-muted-foreground font-mono flex justify-between">
@@ -263,9 +263,9 @@ const LabVisual = ({ kind }: { kind: string }) => {
     case "sql":
       return (
         <div className="font-mono text-[12px]">
-          <div><span className="text-primary">SELECT</span> name, COUNT(*)</div>
-          <div><span className="text-primary">FROM</span> orders <span className="text-primary">JOIN</span> users</div>
-          <div><span className="text-primary">GROUP BY</span> name;</div>
+          <div><span className="text-brand">SELECT</span> name, COUNT(*)</div>
+          <div><span className="text-brand">FROM</span> orders <span className="text-brand">JOIN</span> users</div>
+          <div><span className="text-brand">GROUP BY</span> name;</div>
           <div className="mt-3 rounded-lg border border-border overflow-hidden">
             <div className="grid grid-cols-2 text-[11px] font-semibold bg-muted/50 px-3 py-1.5">
               <span>name</span><span>count</span>
@@ -284,7 +284,7 @@ const LabVisual = ({ kind }: { kind: string }) => {
           <svg viewBox="0 0 320 160" className="w-full h-40">
             <defs>
               <marker id="dot" markerWidth="6" markerHeight="6" refX="3" refY="3">
-                <circle cx="3" cy="3" r="3" fill="hsl(var(--primary))" />
+                <circle cx="3" cy="3" r="3" fill="hsl(var(--brand))" />
               </marker>
             </defs>
             {[
@@ -298,7 +298,7 @@ const LabVisual = ({ kind }: { kind: string }) => {
                 key={i}
                 x1={a.split(",")[0]} y1={a.split(",")[1]}
                 x2={b.split(",")[0]} y2={b.split(",")[1]}
-                stroke="hsl(var(--primary))" strokeWidth="1.5" strokeDasharray="3 3"
+                stroke="hsl(var(--brand))" strokeWidth="1.5" strokeDasharray="3 3"
                 opacity="0.6"
               />
             ))}
@@ -307,8 +307,8 @@ const LabVisual = ({ kind }: { kind: string }) => {
               [120, 120, "H1"], [280, 40, "H2"], [280, 120, "H3"],
             ].map(([x, y, l], i) => (
               <g key={i}>
-                <circle cx={x as number} cy={y as number} r="14" fill="hsl(var(--primary-soft))" stroke="hsl(var(--primary))" />
-                <text x={x as number} y={(y as number) + 4} textAnchor="middle" fontSize="10" fill="hsl(var(--primary))" fontWeight="600">{l}</text>
+                <circle cx={x as number} cy={y as number} r="14" fill="hsl(var(--brand-soft))" stroke="hsl(var(--brand))" />
+                <text x={x as number} y={(y as number) + 4} textAnchor="middle" fontSize="10" fill="hsl(var(--brand))" fontWeight="600">{l}</text>
               </g>
             ))}
           </svg>
@@ -318,18 +318,18 @@ const LabVisual = ({ kind }: { kind: string }) => {
     case "cyber":
       return (
         <div className="font-mono text-[12px]">
-          <div><span className="text-primary">$</span> nmap -sV target.local</div>
+          <div><span className="text-brand">$</span> nmap -sV target.local</div>
           <div className="text-muted-foreground">Starting Nmap 7.94 ...</div>
           <div className="mt-1 grid grid-cols-3 text-[11px] gap-y-1">
             <span className="text-muted-foreground">PORT</span>
             <span className="text-muted-foreground">STATE</span>
             <span className="text-muted-foreground">SERVICE</span>
-            <span>22/tcp</span><span className="text-primary">open</span><span>ssh</span>
-            <span>80/tcp</span><span className="text-primary">open</span><span>http</span>
-            <span>443/tcp</span><span className="text-primary">open</span><span>https</span>
+            <span>22/tcp</span><span className="text-brand">open</span><span>ssh</span>
+            <span>80/tcp</span><span className="text-brand">open</span><span>http</span>
+            <span>443/tcp</span><span className="text-brand">open</span><span>https</span>
             <span>3306/tcp</span><span>filtered</span><span>mysql</span>
           </div>
-          <div className="mt-3 inline-flex items-center gap-1 text-[10px] text-primary">
+          <div className="mt-3 inline-flex items-center gap-1 text-[10px] text-brand">
             <ShieldCheck size={12} /> Sandboxed · No outbound traffic
           </div>
         </div>
@@ -340,3 +340,4 @@ const LabVisual = ({ kind }: { kind: string }) => {
 };
 
 export default LabsGrid;
+

@@ -5,7 +5,6 @@ import ValueCards from "@/components/landing/ValueCards";
 import LabsGrid from "@/components/landing/LabsGrid";
 import HowItWorks from "@/components/landing/HowItWorks";
 import UseCases from "@/components/landing/UseCases";
-import FAQ from "@/components/landing/FAQ";
 import CTABanner from "@/components/landing/CTABanner";
 import Footer from "@/components/landing/Footer";
 
@@ -20,7 +19,6 @@ const Index = () => {
         <LabsGrid />
         <HowItWorks />
         <UseCases />
-        <FAQ />
         <CTABanner />
       </main>
       <Footer />

@@ -22,9 +22,9 @@ const UseCases = () => (
   <section id="use-cases" className="container py-20 md:py-28">
     <div className="grid md:grid-cols-12 gap-10 items-start">
       <div className="md:col-span-5">
-        <div className="text-xs font-medium uppercase tracking-wider text-primary">Why It Matters</div>
+        <div className="text-xs font-medium uppercase tracking-wider text-brand">Why It Matters</div>
         <h2 className="mt-3 text-3xl md:text-5xl font-bold leading-tight">
-          Built so anyone can <span className="text-primary">just start.</span>
+          Built so anyone can <span className="text-brand">just start.</span>
         </h2>
         <p className="mt-4 text-muted-foreground max-w-md leading-relaxed">
           AtherSpace removes the part everyone hates — setup. The result is more time
@@ -38,7 +38,7 @@ const UseCases = () => (
             key={c.title}
             className="flex gap-4 rounded-2xl border border-border bg-card p-5 shadow-card"
           >
-            <div className="shrink-0 h-11 w-11 rounded-xl bg-primary-soft text-primary flex items-center justify-center">
+            <div className="shrink-0 h-11 w-11 rounded-xl bg-brand-soft text-brand flex items-center justify-center">
               <c.icon size={20} />
             </div>
             <div>
@@ -53,3 +53,4 @@ const UseCases = () => (
 );
 
 export default UseCases;
+

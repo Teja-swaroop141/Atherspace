@@ -11,8 +11,8 @@ const HeroMock = () => {
         <div className="flex items-center gap-2 px-4 h-10 border-b border-border bg-muted/40">
           <div className="flex gap-1.5">
             <span className="h-2.5 w-2.5 rounded-full bg-destructive/70" />
-            <span className="h-2.5 w-2.5 rounded-full bg-primary/30" />
-            <span className="h-2.5 w-2.5 rounded-full bg-primary/60" />
+            <span className="h-2.5 w-2.5 rounded-full bg-brand/30" />
+            <span className="h-2.5 w-2.5 rounded-full bg-brand/60" />
           </div>
           <div className="ml-4 flex-1 max-w-sm rounded-md bg-background/80 border border-border px-3 py-1 text-xs text-muted-foreground font-mono">
             atherspace.io / lab / python
@@ -26,7 +26,7 @@ const HeroMock = () => {
               key={t}
               className={`px-3 py-2 text-xs rounded-t-lg font-medium whitespace-nowrap ${
                 i === 0
-                  ? "bg-primary-soft text-primary border-b-2 border-primary"
+                  ? "bg-brand-soft text-brand border-b-2 border-brand"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
@@ -39,21 +39,21 @@ const HeroMock = () => {
           {/* Terminal panel */}
           <div className="lg:col-span-2 p-5 font-mono text-[12px] leading-relaxed bg-card">
             <div className="text-muted-foreground"># Welcome to AtherSpace · Python 3.12 container</div>
-            <div className="mt-1"><span className="text-primary">ather@lab</span>:~$ <span>python</span></div>
+            <div className="mt-1"><span className="text-brand">ather@lab</span>:~$ <span>python</span></div>
             <div className="text-muted-foreground">Python 3.12.2 (main) [GCC 12.2.0] on linux</div>
-            <div>&gt;&gt;&gt; <span className="text-primary">import</span> numpy <span className="text-primary">as</span> np</div>
+            <div>&gt;&gt;&gt; <span className="text-brand">import</span> numpy <span className="text-brand">as</span> np</div>
             <div>&gt;&gt;&gt; np.linspace(0, 1, 5)</div>
             <div className="text-muted-foreground">array([0.  , 0.25, 0.5 , 0.75, 1.  ])</div>
-            <div>&gt;&gt;&gt; <span className="text-primary">print</span>(<span className="text-accent-foreground">"hello, ather"</span>)</div>
+            <div>&gt;&gt;&gt; <span className="text-brand">print</span>(<span className="text-accent-foreground">"hello, ather"</span>)</div>
             <div className="text-muted-foreground">hello, ather</div>
-            <div className="mt-1">&gt;&gt;&gt; <span className="inline-block w-2 h-3.5 align-middle bg-primary animate-pulse" /></div>
+            <div className="mt-1">&gt;&gt;&gt; <span className="inline-block w-2 h-3.5 align-middle bg-brand animate-pulse" /></div>
           </div>
 
           {/* Status panel */}
           <aside className="border-t lg:border-t-0 lg:border-l border-border p-5 bg-muted/20">
             <div className="text-xs font-semibold tracking-wider uppercase text-muted-foreground">Container</div>
             <div className="mt-1 flex items-center gap-2 text-sm">
-              <span className="h-2 w-2 rounded-full bg-primary" />
+              <span className="h-2 w-2 rounded-full bg-brand" />
               <span className="font-medium">Running</span>
               <span className="ml-auto text-muted-foreground font-mono text-xs">02:14</span>
             </div>
@@ -65,7 +65,7 @@ const HeroMock = () => {
               <Stat icon={<Globe size={14} />} label="Region" value="ap-south-1" />
             </div>
 
-            <button className="mt-6 w-full rounded-full bg-primary text-primary-foreground text-sm font-medium py-2 shadow-pop hover:opacity-90 transition">
+            <button className="mt-6 w-full rounded-full bg-brand text-brand-foreground text-sm font-medium py-2 shadow-pop hover:opacity-90 transition">
               Open Editor
             </button>
           </aside>
@@ -94,10 +94,11 @@ const Stat = ({
     </div>
     {bar !== undefined && (
       <div className="mt-1.5 h-1.5 rounded-full bg-border overflow-hidden">
-        <div className="h-full bg-primary rounded-full" style={{ width: `${bar}%` }} />
+        <div className="h-full bg-brand rounded-full" style={{ width: `${bar}%` }} />
       </div>
     )}
   </div>
 );
 
 export default HeroMock;
+

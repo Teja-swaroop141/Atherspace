@@ -163,18 +163,7 @@ cd Aetherspace
 ```
 
 > ✅ No image building needed — all lab images are public on Docker Hub and will be pulled automatically by Kubernetes when a student launches a lab.
-
----
-
-#### 1.5 Start the Backend Server
-
-```bash
-cd Aetherspace/backend
-
-# Install Python dependencies
-pip install -r requirements.txt
-
-# Run the FastAPI server (accessible from outside the instance)
+essible from outside the instance)
 python -m uvicorn main:app --host 0.0.0.0 --port 8000
 ```
 

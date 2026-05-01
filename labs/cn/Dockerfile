@@ -54,10 +54,8 @@ RUN echo 'set ns [new Simulator]' > /root/projects/demo.tcl && \
     echo '$ns at 5.0 "finish"' >> /root/projects/demo.tcl && \
     echo '$ns run' >> /root/projects/demo.tcl
 
-# 4. Setup VNC Password
+# 4. Disable VNC Password (no auth)
 RUN mkdir -p ~/.vnc
-RUN echo "student" | vncpasswd -f > ~/.vnc/passwd
-RUN chmod 600 ~/.vnc/passwd
 
 # 5. Fix VNC Startup (Prevent Crashes)
 RUN echo "#!/bin/sh" > ~/.vnc/xstartup && \
@@ -74,7 +72,7 @@ RUN echo "#!/bin/bash" > /start.sh && \
     echo "echo '⏳ Initializing lab environment, please wait...'" >> /start.sh && \
     echo "sleep 10" >> /start.sh && \
     echo "echo '🖥️ Starting VNC Server...'" >> /start.sh && \
-    echo "vncserver :1 -geometry 1280x720 -depth 24" >> /start.sh && \
+    echo "vncserver :1 -geometry 1280x720 -depth 24 -SecurityTypes None" >> /start.sh && \
     echo "echo '🌐 Starting NoVNC Web Interface...'" >> /start.sh && \
     echo "/usr/share/novnc/utils/launch.sh --vnc localhost:5901 --listen 6080" >> /start.sh
 

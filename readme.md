@@ -1,90 +1,272 @@
-# 🚀 ZeroSetup
-### *Stop Installing. Start Coding. Instant Cloud Labs for Universities.*
+# 🌌 Aetherspace
+### *Instant Cloud Labs — No Setup. Just Learn.*
 
-**ZeroSetup** is an Internal Developer Platform (IDP) that uses Kubernetes to provide students with instant, pre-configured development environments in their browser. No installation required.
+> A Kubernetes-powered Internal Developer Platform (IDP) that gives students browser-based, pre-configured development environments in seconds. No local installs. No config headaches. Just code.
 
 ---
 
-## 📂 Project Structure
+## 🔗 Demo & Screenshots
+
+🚀 **Live Demo:** `[Add your deployment URL here]`
+
+| Landing Page | Lab Dashboard | Active Lab Session |
+|---|---|---|
+| ![Landing Page](./screenshots/landing.png) | ![Dashboard](./screenshots/dashboard.png) | ![Lab Session](./screenshots/lab-session.png) |
+
+> 📸 *Add screenshots to a `/screenshots` folder in the root of this repo.*
+
+---
+
+## ✨ What Is Aetherspace?
+
+Aetherspace is a cloud lab platform built for universities and bootcamps. A student clicks a button on the web dashboard, and within seconds a fully-loaded containerized lab environment (Python IDE, SQL workbench, Cybersecurity desktop, Data Science notebook, or Networking tools) opens directly in their browser — powered by Kubernetes under the hood.
+
+**Key capabilities:**
+- ⚡ One-click lab provisioning via Kubernetes Pods
+- 🕐 Automatic session cleanup after 30 minutes (resource safety)
+- 🔒 Capacity-capped environment (max 3 concurrent pods on free-tier infra)
+- 🌐 Browser-based access — no VPN, no SSH, no client install
+- 🧹 Auto-teardown of stale pods and services
+
+---
+
+## 🏗️ Architecture Overview
 
 ```
-zerosetup/
-├── backend/
-│   ├── main.py              # FastAPI Controller (Orchestrates Kubernetes)
-│   └── requirements.txt     # Python dependencies (fastapi, uvicorn, kubernetes)
-├── frontend/
-│   ├── src/                 # React.js + Tailwind Sci-Fi Dashboard
-│   ├── public/              # Static Assets (Logos, Icons)
-│   └── index.html           # Entry point
-└── labs/                    # The "Gold Images" for students
-    ├── python/
-    │   ├── Dockerfile       # VS Code + Pandas + Streamlit
-    │   ├── welcome.py       # CLI Demo Script
-    │   └── dashboard.py     # GUI Demo Script
-    ├── sql/
-    │   ├── Dockerfile       # MariaDB + Adminer GUI + Auto-Login Script
-    │   └── init.sql         # Pre-loaded "College" Database Data
-    └── cyber/
-        ├── Dockerfile       # Kali-style Tools + NoVNC Desktop + XFCE
-        └── secret.txt       # Hidden Flag for CTF Challenge
+Aetherspace/
+├── backend/                    # FastAPI server — Kubernetes orchestrator
+│   ├── main.py                 # Core API: spawns & destroys K8s pods
+│   └── requirements.txt        # Python dependencies
+│
+├── frontend/                   # React (Vite + TypeScript) dashboard
+│   ├── src/
+│   │   ├── components/         # Reusable UI components (shadcn/ui + Radix)
+│   │   │   ├── landing/        # Landing page sections (Nav, LabsGrid, CTABanner)
+│   │   │   └── ui/             # Core UI primitives
+│   │   ├── pages/              # Route-level page components
+│   │   ├── hooks/              # Custom React hooks
+│   │   └── lib/                # Utility functions
+│   ├── index.html
+│   └── vite.config.ts
+│
+└── labs/                       # Docker "Gold Images" for each lab type
+    ├── python/                 # VS Code Server + Python environment
+    ├── sql/                    # MariaDB + Adminer GUI
+    ├── cyber/                  # Kali-style tools + NoVNC desktop (XFCE)
+    ├── cn/                     # Computer Networking tools + NoVNC
+    └── Data Science/           # JupyterLab + Data Science stack
 ```
 
+---
 
+## 🧰 Tech Stack
 
-⚡ Quick Start Guide (Run Locally)
-1. Prerequisites
-Docker Desktop (With Kubernetes Enabled in Settings).
+| Layer | Technology |
+|---|---|
+| **Frontend** | React 18, TypeScript, Vite, Tailwind CSS, shadcn/ui, Radix UI |
+| **State / Data** | TanStack Query, React Router v6, React Hook Form + Zod |
+| **Backend** | Python, FastAPI, Uvicorn |
+| **Orchestration** | Kubernetes (K3s / Docker Desktop K8s) |
+| **Container Runtime** | Docker |
+| **Remote Access** | NoVNC (desktop), Code-Server (IDE), Adminer (DB GUI) |
+| **Deployment** | AWS EC2 (auto-detects public IP via metadata service) |
 
-Python 3.x & Node.js installed.
+---
 
-2. Build the Lab Images 🐳
-You must build the Docker images so Kubernetes can find them. Run these commands one by one:
+## 🚀 Available Labs
 
-Bash
+| Lab | Image | Access Method | Port |
+|---|---|---|---|
+| 🐍 Python | `tejaswaroop29/lab-python:v1` | Code-Server (VS Code in browser) | 8080 |
+| 🗄️ SQL | `tejaswaroop29/lab-sql:v1` | Adminer Web GUI | 8080 |
+| 📊 Data Science | `tejaswaroop29/lab-ds:v1` | JupyterLab (no token) | 8888 |
+| 🛡️ Cybersecurity | `tejaswaroop29/lab-cyber:v1` | NoVNC Desktop | 6080 |
+| 🌐 Computer Networks | `tejaswaroop29/lab-cn:v1` | NoVNC Desktop | 6080 |
 
-# 1. Build Python Lab
-cd labs/python
-docker build -t my-python-lab:v1 .
+---
 
-# 2. Build SQL Lab
-cd ../sql
-docker build -t my-sql-lab:v1 .
+## ⚙️ Setup Guide
 
-# 3. Build Cyber Lab (This takes a few minutes)
-cd ../cyber
-docker build -t my-cyber-lab:v1 .
-3. Start the Backend (The Brain) 🧠
-This server listens for API calls and commands Kubernetes to spawn pods.
+Aetherspace uses a **split deployment model**:
 
-Bash
+| Component | Where it runs |
+|---|---|
+| 🎨 **Frontend** (React) | Your local machine |
+| 🧠 **Backend** (FastAPI + Kubernetes) | AWS EC2 instance |
 
-cd ../../backend
+---
 
-# Install Dependencies
-pip install fastapi uvicorn kubernetes
+### Part 1 — EC2 Instance Setup (Backend + Kubernetes) 🖥️
 
-# Run Server (Network Accessible)
-# Note: Allows access from other devices on the same WiFi
-python -m uvicorn main:app --reload --host 0.0.0.0 --port 8000
-4. Start the Frontend (The Dashboard) 🎨
-This launches the React User Interface.
+#### 1.1 Launch an EC2 Instance
 
-Bash
+- **OS:** Ubuntu 22.04 LTS
+- **Instance type:** `m7i-flex.large` (2 vCPU / 8 GB RAM — recommended for running multiple lab pods)
+- **Storage:** At least **20 GB** (Docker images take up space)
+- **Security Group — open these inbound ports:**
 
-cd ../frontend
+| Port | Purpose |
+|---|---|
+| `22` | SSH access |
+| `8000` | FastAPI backend |
+| `30000–32767` | Kubernetes NodePort range (lab access) |
 
-# Install Dependencies
+---
+
+#### 1.2 Install Docker on the EC2 Instance
+
+SSH into your instance, then run:
+
+```bash
+sudo apt update && sudo apt upgrade -y
+
+# Install Docker
+sudo apt install -y docker.io
+sudo systemctl enable --now docker
+sudo usermod -aG docker $USER
+
+# Re-login or run this to apply group changes without logout
+newgrp docker
+```
+
+---
+
+#### 1.3 Install Kubernetes (K3s — lightweight single-node)
+
+```bash
+# Install K3s (includes kubectl)
+curl -sfL https://get.k3s.io | sh -
+
+# Make kubectl usable without sudo
+mkdir -p ~/.kube
+sudo cp /etc/rancher/k3s/k3s.yaml ~/.kube/config
+sudo chown $USER ~/.kube/config
+export KUBECONFIG=~/.kube/config
+
+# Verify cluster is running
+kubectl get nodes
+```
+
+---
+
+#### 1.4 Clone the Repo & Build Lab Images
+
+```bash
+git clone https://github.com/Teja-swaroop141/Aetherspace.git
+cd Aetherspace
+
+# Build all lab Docker images
+cd labs/python  && docker build -t tejaswaroop29/lab-python:v1 . && cd ../..
+cd labs/sql     && docker build -t tejaswaroop29/lab-sql:v1    . && cd ../..
+cd "labs/Data Science" && docker build -t tejaswaroop29/lab-ds:v1 . && cd ../..
+cd labs/cyber   && docker build -t tejaswaroop29/lab-cyber:v1  . && cd ../..
+cd labs/cn      && docker build -t tejaswaroop29/lab-cn:v1     . && cd ../..
+```
+
+> ⏳ This may take several minutes on first run.
+
+---
+
+#### 1.5 Start the Backend Server
+
+```bash
+cd Aetherspace/backend
+
+# Install Python dependencies
+pip install -r requirements.txt
+
+# Run the FastAPI server (accessible from outside the instance)
+python -m uvicorn main:app --host 0.0.0.0 --port 8000
+```
+
+> ✅ The backend is now live. Note your **EC2 Public IP** from the AWS console — you'll need it next.
+> 
+> API docs are available at: `http://<EC2-PUBLIC-IP>:8000/docs`
+
+---
+
+### Part 2 — Frontend Setup (Local Machine) 💻
+
+#### 2.1 Clone the Repo Locally
+
+```bash
+git clone https://github.com/Teja-swaroop141/Aetherspace.git
+cd Aetherspace/frontend
+```
+
+---
+
+#### 2.2 Point the Frontend at Your EC2 Backend
+
+Create a `.env` file inside the `frontend/` folder:
+
+```env
+VITE_API_URL=http://<EC2-PUBLIC-IP>:8000
+```
+
+> 🔁 Replace `<EC2-PUBLIC-IP>` with the actual public IPv4 address of your EC2 instance.
+> Example: `VITE_API_URL=http://13.233.45.67:8000`
+
+---
+
+#### 2.3 Install Dependencies & Run
+
+```bash
+# Install dependencies
 npm install
 
-# Run React App
+# Start the React dev server
 npm run dev -- --host
-🛠 Tech Stack
-Orchestration: Kubernetes (K3s / Docker Desktop K8s)
+```
 
-Backend: Python (FastAPI) + Kubernetes Python Client
+> 🌐 Frontend will be accessible at `http://localhost:5173`
 
-Frontend: React (Vite) + CSS Modules (Neon/Space Theme)
+---
 
-Container Runtime: Docker
+### Part 3 — Launch a Lab 🚀
 
-Remote Access: NoVNC (Desktop), Code-Server (IDE), Pgweb/Adminer (DB GUI)
+1. Open `http://localhost:5173` in your browser
+2. Pick a lab (Python, SQL, Data Science, Cyber, or Networks)
+3. Click **Launch** — the frontend calls your EC2 backend
+4. The backend spawns a Kubernetes Pod on EC2 and returns a URL
+5. A new browser tab opens with your live, browser-based lab environment
+
+---
+
+> [!NOTE]
+> Labs auto-terminate after **30 minutes** to free up EC2 resources. The backend enforces a max of **3 concurrent pods** by default.
+
+---
+
+## 🔌 API Reference
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/health` | Health check + host IP |
+| `GET` | `/status` | Active pod count / capacity |
+| `GET` | `/config` | Returns host IP |
+| `POST` | `/start-python-lab` | Spawn a Python lab pod |
+| `POST` | `/start-sql-lab` | Spawn a SQL lab pod |
+| `POST` | `/start-ds-lab` | Spawn a Data Science pod |
+| `POST` | `/start-cyber-lab` | Spawn a Cybersecurity pod |
+| `POST` | `/start-cn-lab` | Spawn a Computer Networks pod |
+| `DELETE` | `/stop-lab/{pod_name}` | Terminate a specific pod |
+
+---
+
+## 👥 Collaborators
+
+| Role | Profile |
+|---|---|
+| 👨‍💻 Author & Lead Dev | [@Teja-swaroop141](https://github.com/Teja-swaroop141) |
+| 🤝 Collaborator | [@sumans-19](https://github.com/sumans-19) |
+
+---
+
+## 📄 License
+
+This project is open-source. Feel free to fork and adapt for your institution.
+
+---
+
+<p align="center">Built with ☁️ and Kubernetes by the Aetherspace team</p>

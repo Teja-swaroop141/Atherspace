@@ -7,13 +7,13 @@
 
 ## 🔗 Demo & Screenshots
 
-🚀 **Live Demo:** `[Add your deployment URL here]`
+🚀 **Live Demo:** [https://atherspace.vercel.app/](https://atherspace.vercel.app/)
 
-| Landing Page | Lab Dashboard | Active Lab Session |
+| Landing Page | Lab Section | Active Lab Session |
 |---|---|---|
-| ![Landing Page](./screenshots/landing.png) | ![Dashboard](./screenshots/dashboard.png) | ![Lab Session](./screenshots/lab-session.png) |
+| ![Landing Page](./screenshots/landing.png) | ![labs section](./screenshots/labs-section.png) | ![Lab Session](./screenshots/lab-session.png) |
 
-> 📸 *Add screenshots to a `/screenshots` folder in the root of this repo.*
+<!-- > 📸 *Add screenshots to a `/screenshots` folder in the root of this repo.* -->
 
 ---
 
@@ -163,12 +163,23 @@ cd Aetherspace
 ```
 
 > ✅ No image building needed — all lab images are public on Docker Hub and will be pulled automatically by Kubernetes when a student launches a lab.
-essible from outside the instance)
+
+---
+
+#### 1.5 Start the Backend Server
+
+```bash
+cd Aetherspace/backend
+
+# Install Python dependencies
+pip install -r requirements.txt
+
+# Run the FastAPI server (accessible from outside the instance)
 python -m uvicorn main:app --host 0.0.0.0 --port 8000
 ```
 
 > ✅ The backend is now live. Note your **EC2 Public IP** from the AWS console — you'll need it next.
-> 
+>
 > API docs are available at: `http://<EC2-PUBLIC-IP>:8000/docs`
 
 ---
@@ -242,12 +253,12 @@ npm run dev -- --host
 
 ---
 
-## 👥 Collaborators
+## 🛠️ Built By
 
-| Role | Profile |
-|---|---|
-| 👨‍💻 Author & Lead Dev | [@Teja-swaroop141](https://github.com/Teja-swaroop141) |
-| 🤝 Collaborator | [@sumans-19](https://github.com/sumans-19) |
+Aetherspace is jointly developed and maintained by:
+
+| [@Teja-swaroop141](https://github.com/Teja-swaroop141) | [@sumans-19](https://github.com/sumans-19) |
+|:---:|:---:|
 
 ---
 
@@ -257,4 +268,4 @@ This project is open-source. Feel free to fork and adapt for your institution.
 
 ---
 
-<p align="center">Built with ☁️ and Kubernetes by the Aetherspace team</p>
+<p align="center">Setup was the problem. Containers were the answer</p>

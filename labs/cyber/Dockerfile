@@ -28,10 +28,8 @@ RUN apt-get update && apt-get install -y --fix-missing \
 RUN mkdir -p /target
 RUN echo "🚩 FLAG: {GHOST_IN_THE_SHELL_V2}" > /target/secret.txt
 
-# 4. Setup VNC Password
+# 4. Disable VNC Password (no auth)
 RUN mkdir -p ~/.vnc
-RUN echo "hacker" | vncpasswd -f > ~/.vnc/passwd
-RUN chmod 600 ~/.vnc/passwd
 
 # --- THE FIX IS HERE 👇 ---
 # We create a link named 'index.html' that points to 'vnc.html'.
@@ -45,7 +43,7 @@ RUN echo "#!/bin/bash" > /start.sh && \
     echo "echo '🎯 Starting Vulnerable Target...'" >> /start.sh && \
     echo "cd /target && python3 -m http.server 9000 &" >> /start.sh && \
     echo "echo '🖥️ Starting VNC Server...'" >> /start.sh && \
-    echo "vncserver :1 -geometry 1280x720 -depth 24" >> /start.sh && \
+    echo "vncserver :1 -geometry 1280x720 -depth 24 -SecurityTypes None" >> /start.sh && \
     echo "echo '🌐 Starting NoVNC Web Interface...'" >> /start.sh && \
     echo "/usr/share/novnc/utils/launch.sh --vnc localhost:5901 --listen 6080" >> /start.sh
 
